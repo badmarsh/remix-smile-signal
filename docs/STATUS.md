@@ -9,7 +9,7 @@ HEAD: main (PR #7+#8+#9+#10+#11 merged — F0+F1+F2+F3+F4+F5+F8 kompletné v mai
 | Kontrola | Príkaz | Výsledok | Dôkaz |
 |----------|--------|----------|-------|
 | Inštalácia | `npm install --legacy-peer-deps` | OK | 69 balíkov, 0 zraniteľností |
-| Testy | `npm test` | 147/147 pass, 0 fail | `scripts/run-tests.mjs` |
+| Testy | `npm test` | 153/153 pass, 0 fail | `scripts/run-tests.mjs` |
 | Build | `npm run build` | OK, ~779 ms | JS 470 kB / 137 kB gzip, dist ~7,2 MB |
 | Typy | `npx tsc --noEmit` | 0 chyby | výstup tsc |
 | Build | `npm run build` | OK, ~779 ms | JS 470 kB / 137 kB gzip, dist ~7,2 MB |
@@ -25,10 +25,10 @@ HEAD: main (PR #7+#8+#9+#10+#11 merged — F0+F1+F2+F3+F4+F5+F8 kompletné v mai
 | F3 | Hrateľnosť, balans, onboarding | ✅ hotové | ✅ | PR #7 (merged do main) | F3.1 fixed timestep accumulator, F3.2 onboarding (controls help, hint overlay, status reminder), focus management + a11y modals, touch fire charging |
 | F4 | Prezentácia, mobil, prístupnosť | ✅ hotové | ✅ | PR #8 (merged do main) | Focus management (save/restore + autoFocus v 5 modáli), dotykové tlačidlo OHEŇ s nabíjacou spätnou väzbou |
 | F5 | Kazety a Didaktik | ✅ hotové | ✅ | PR #9 (merged do main) | basicSource.test.ts (15 testov Sinclair BASIC), chiptuneAssets.test.ts (11 testov 1-bit SFX/melódie), 147/147 celkových testov |
-| F6 | Manuál a tlač | ⏳ | ❌ | — | — |
+| F6 | Manuál a tlač | 🔄 | ⏳ | rc/f6-manual-tlac | printPack.test.ts (6 testov — karta 63×88 mm, krabička 165×225×38 mm, @media print CSS), 153/153 celkových testov |
 | F7 | Architektúra a kvalita kódu | ⏳ | ❌ | — | — |
 | F8 | Testy a QA | ✅ hotové | ✅ | PR #11 (merged do main) | dedication.test.ts (12 testov osobného venovania Rado Ceglédymu), specs.test.ts (7 testov Didaktik M hardvéru a ZX palety), 147/147 celkových testov |
-| F9 | Dokumentácia, vydanie, odovzdanie | 🔄 | ⏳ | rc/f9-dokumentacia-vydanie-odovzdanie | docs/RELEASE.md, docs/HANDOFF.md, tag v1.0.0-rc.1, GitHub release |
+| F9 | Dokumentácia, vydanie, odovzdanie | ✅ hotové | ✅ | PR #12 (merged do main) | docs/RELEASE.md, docs/HANDOFF.md, tag v1.0.0-rc.1, GitHub release |
 
 ## Priorita (ak nie je čas na všetko)
 

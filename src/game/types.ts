@@ -397,6 +397,7 @@ export interface HudSnapshot {
     totalWaves?: number;
     partnerChargeRatio?: number;
     relaySyncProgress?: number;
+    selectedZone?: number;
 }
 
 export interface GameWorld {

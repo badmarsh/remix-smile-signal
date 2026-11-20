@@ -578,8 +578,8 @@ export const STAGES: StageDefinition[] = [
       { ...tileCenter(26, 5), kind: 'ornament' },
       { ...tileCenter(5, 18), kind: 'ornament' },
       { ...tileCenter(26, 18), kind: 'ornament' },
-      { ...tileCenter(15, 5), kind: 'caries' },
-      { ...tileCenter(15, 18), kind: 'fiber' },
+      { ...tileCenter(15, 5), kind: 'fiber' },   // relay endpoint A
+      { ...tileCenter(15, 18), kind: 'fiber' },  // relay endpoint B
     ],
     pickups: [
       { ...tileCenter(2, 11), kind: 'crown', points: 400 },

@@ -662,6 +662,16 @@ function isExitTile(stage: StageDefinition, x: number, y: number): boolean {
   return stage.grid[row][col] === 'E';
 }
 
+/** Zone index (0-3) at the given pixel position on a deploy_select map, or null. */
+function zoneAt(stage: StageDefinition, x: number, y: number): number | null {
+  const col = Math.floor(x / TILE_SIZE);
+  const row = Math.floor(y / TILE_SIZE);
+  if (col < 0 || col >= GRID_COLS || row < 0 || row >= GRID_ROWS) return null;
+  const ch = stage.grid[row][col];
+  if (ch >= '1' && ch <= '4') return ch.charCodeAt(0) - '1'.charCodeAt(0);
+  return null;
+}
+
 /** Partner charge AoE blast: bubbles nearby enemies within the charge radius. */
 function triggerPartnerBlast(world: GameWorld): void {
   const p = world.player;
@@ -1537,7 +1547,7 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
       p.partnerStepDist += moved2;
       p.partnerAnimFrame = Math.floor(p.partnerStepDist / 6) % 2;
     }
-    if (p2In?.fireJustPressed) {
+    if (p2In?.fireJustPressed && world.playMode !== 'deploy_select') {
       firePartnerWeapon(world);
     }
   } else {
@@ -1657,7 +1667,19 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
   }
 
   if (input.fireJustPressed) {
-    firePlayerWeapon(world);
+    if (world.playMode === 'deploy_select') {
+      const zone = zoneAt(world.stage, p.x, p.y);
+      if (zone !== null) {
+        world.selectedZone = zone;
+        world.playMode = 'timed_arena';
+        world.modeTimer = world.stage.timeLimitSec ?? 90;
+        world.chronicleText = `ZÓNA ${zone + 1} VYBRANÁ! PREBĚHNI KORIDOR!`;
+        world.chronicleTimer = 3.0;
+        world.audioQueue.push({ type: 'stageClear' });
+      }
+    } else {
+      firePlayerWeapon(world);
+    }
   }
 
   // Update Dizzy/Towdie Stage Relic (or Stage 6 mandatory MVP Plaque once boss F4 drops it)
@@ -1741,6 +1763,23 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     ) {
       p.partnerAssistCooldown = 0.9;
       restoreTarget(world, t.id);
+    }
+  }
+
+  // --- Relay repair endpoint sync (Phase C) ---
+  // Runs after objectives so targets restored this frame are visible.
+  if (world.playMode === 'relay_repair') {
+    const fiberEndpoints = world.targets.filter((t) => t.kind === 'fiber');
+    if (fiberEndpoints.length >= 2) {
+      const a = fiberEndpoints[0];
+      const b = fiberEndpoints[1];
+      if (a.restored && b.restored && !world.relaySolved) {
+        world.relaySolved = true;
+        world.chronicleText = 'RELÉ SPOJENÉ! PRECHOD NA OBRANU CENTRA!';
+        world.chronicleTimer = 3.0;
+        world.audioQueue.push({ type: 'stageClear' });
+        spawnParticles(world, p.x, p.y, 24, ZX_PALETTE.brightGreen, 70, 0.5);
+      }
     }
   }
 
@@ -2148,8 +2187,26 @@ export function getHudSnapshot(world: GameWorld): HudSnapshot {
     currentWave: world.playMode === 'wave_defense' ? world.currentWave : undefined,
     totalWaves: world.playMode === 'wave_defense' ? Math.max(1, stageWavesTotal(world.stage)) : undefined,
     partnerChargeRatio: world.partnerChargeProgress,
-    relaySyncProgress: world.relaySolved ? 1 : 0,
+    relaySyncProgress:
+      world.playMode === 'relay_repair' ? relaySyncCoverage(world) : 0,
+    selectedZone: world.selectedZone,
   };
+}
+
+/** Relay sync coverage: 0, 0.5, or 1 based on how many fiber endpoints are covered by players. */
+function relaySyncCoverage(world: GameWorld): number {
+  if (world.relaySolved) return 1;
+  const fiberEndpoints = world.targets.filter((t) => t.kind === 'fiber');
+  if (fiberEndpoints.length < 2) return 0;
+  const p = world.player;
+  const covered = fiberEndpoints.reduce((n, e) => {
+    const p1 = Math.hypot(p.x - e.x, p.y - e.y) < 9.5;
+    const p2 =
+      world.coopEnabled &&
+      Math.hypot(p.partnerX - e.x, p.partnerY - e.y) < 9.5;
+    return n + (p1 || p2 ? 1 : 0);
+  }, 0);
+  return covered / fiberEndpoints.length;
 }
 
 /** Total wave count for the current stage's wave_defense setup. */

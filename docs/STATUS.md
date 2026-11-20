@@ -1,8 +1,8 @@
 # docs/STATUS.md — Release Candidate v1.0.0-rc.1
 
-Stav: **F3 — Hrateľnosť, balans, onboarding** (priebežne aktualizované po každej fáze)
+Stav: **F4 — Prezentácia, mobil, prístupnosť** (priebežne aktualizované po každej fáze)
 Aktualizované: 20. 11. 2026
-HEAD: d8e7987 (rc/f3-gameplay-balance, F3.1 fixed timestep + F3.2 onboarding committed)
+HEAD: main (PR #7 merged — F0+F1+F3 kompletne v maine)
 
 ## Baseline (F0.1 — DOKONČENÉ)
 
@@ -21,8 +21,8 @@ HEAD: d8e7987 (rc/f3-gameplay-balance, F3.1 fixed timestep + F3.2 onboarding com
 | F0 | Základ a poistka | ✅ hotové | ✅ | PR #4 (rc/f0-baseline) | verify.mjs, check-rules.mjs, ci.yml, golden-baseline.json |
 | F1 | Kritické chyby (P0) | ✅ hotové | ✅ | PR #5 (rc/f1-critical-fixes) | tsc=0, bot tests, reachability, verify green |
 | F2 | Obsah a slovenčina | ⏳ na radu | ❌ | — | — |
-| F3 | Hrateľnosť, balans, onboarding | 🔄 | ⏳ | rc/f3-gameplay-balance | F3.1 fixed timestep (commit d8e7987), F3.2 onboarding (CassetteIntroOverlay controls help, App.tsx hint overlay, StatusModal controls reminder) |
-| F4 | Prezentácia, mobil, prístupnosť | ⏳ | ❌ | — | — |
+| F3 | Hrateľnosť, balans, onboarding | ✅ hotové | ✅ | PR #7 (merged do main) | F3.1 fixed timestep accumulator, F3.2 onboarding (controls help, hint overlay, status reminder), focus management + a11y modals, touch fire charging |
+| F4 | Prezentácia, mobil, prístupnosť | 🔄 | ⏳ | rc/f4-presentation-mobile-a11y | Focus trap + focus obnovenie v modáli, autoFocus na prvý button, dotykové tlačidlo OHEŇ s nabíjacou spätnou väzbou |
 | F5 | Kazety a Didaktik | ⏳ | ❌ | — | — |
 | F6 | Manuál a tlač | ⏳ | ❌ | — | — |
 | F7 | Architektúra a kvalita kódu | ⏳ | ❌ | — | — |

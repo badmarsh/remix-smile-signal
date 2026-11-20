@@ -217,6 +217,7 @@ export const StatusModal: React.FC<StatusModalProps> = ({
           {isPaused ? (
             <button
               type="button"
+              autoFocus
               onClick={(e) => {
                 e.currentTarget.blur();
                 onResume();
@@ -228,6 +229,7 @@ export const StatusModal: React.FC<StatusModalProps> = ({
           ) : isVictory ? (
             <button
               type="button"
+              autoFocus
               onClick={(e) => {
                 e.currentTarget.blur();
                 onOpenVisualManual();
@@ -240,6 +242,7 @@ export const StatusModal: React.FC<StatusModalProps> = ({
             <button
               type="button"
               data-start="true"
+              autoFocus
               onClick={(e) => {
                 e.currentTarget.blur();
                 onContinueCheckpoint();

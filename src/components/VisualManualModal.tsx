@@ -134,6 +134,7 @@ export const VisualManualModal: React.FC<VisualManualModalProps> = ({
             <button
               type="button"
               onClick={onClose}
+              autoFocus
               aria-label="Zavrieť vizuálny manuál"
               className="min-h-[38px] cursor-pointer whitespace-nowrap rounded-sm border border-[#525b6e] bg-[#141925] px-3.5 py-1.5 font-mono text-xs font-semibold text-white hover:border-[#00e8e8] hover:text-[#00e8e8]"
             >

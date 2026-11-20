@@ -138,19 +138,20 @@ export const CassetteIntroOverlay: React.FC<CassetteIntroOverlayProps> = ({
 
       <div className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 font-mono text-xs text-[#c9c6be]">
         <span className="truncate text-[#00e8e8]">{introState.statusLine}</span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!finishedRef.current) {
-              finishedRef.current = true;
-              onFinish();
-            }
-          }}
-          className="min-h-[34px] shrink-0 cursor-pointer rounded-sm border border-[#525660] bg-[#13161e] px-3 py-1 font-mono text-xs font-semibold text-[#ffee00] hover:border-[#ffee00]"
-        >
-          Preskočiť [Ľubovoľná klávesa]
-        </button>
+          <button
+            type="button"
+            autoFocus
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!finishedRef.current) {
+                finishedRef.current = true;
+                onFinish();
+              }
+            }}
+            className="min-h-[34px] shrink-0 cursor-pointer rounded-sm border border-[#525660] bg-[#13161e] px-3 py-1 font-mono text-xs font-semibold text-[#ffee00] hover:border-[#ffee00]"
+          >
+            Preskočiť [Ľubovoľná klávesa]
+          </button>
       </div>
 
       {/* Onboarding: controls help shown once before first play */}

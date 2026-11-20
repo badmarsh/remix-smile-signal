@@ -1,15 +1,15 @@
 # docs/STATUS.md — Release Candidate v1.0.0-rc.1
 
-Stav: **F4 — Prezentácia, mobil, prístupnosť** (priebežne aktualizované po každej fáze)
+Stav: **F5 — Kazety a Didaktik** (priebežne aktualizované po každej fáze)
 Aktualizované: 20. 11. 2026
-HEAD: main (PR #7 merged — F0+F1+F3 kompletne v maine)
+HEAD: main (PR #7+#8 merged — F0+F1+F3+F4 kompletné v maine)
 
 ## Baseline (F0.1 — DOKONČENÉ)
 
 | Kontrola | Príkaz | Výsledok | Dôkaz |
 |----------|--------|----------|-------|
 | Inštalácia | `npm install --legacy-peer-deps` | OK | 69 balíkov, 0 zraniteľností |
-| Testy | `npm test` | 99/99 pass, 0 fail | `scripts/run-tests.mjs` |
+| Testy | `npm test` | 125/125 pass, 0 fail | `scripts/run-tests.mjs` |
 | Typy | `npx tsc --noEmit` | 0 chyby | výstup tsc |
 | Build | `npm run build` | OK, ~779 ms | JS 470 kB / 137 kB gzip, dist ~7,2 MB |
 | `--legacy-peer-deps` | nutný? | Áno (peer konflikt) | viz F0.1 |
@@ -22,8 +22,8 @@ HEAD: main (PR #7 merged — F0+F1+F3 kompletne v maine)
 | F1 | Kritické chyby (P0) | ✅ hotové | ✅ | PR #5 (rc/f1-critical-fixes) | tsc=0, bot tests, reachability, verify green |
 | F2 | Obsah a slovenčina | ⏳ na radu | ❌ | — | — |
 | F3 | Hrateľnosť, balans, onboarding | ✅ hotové | ✅ | PR #7 (merged do main) | F3.1 fixed timestep accumulator, F3.2 onboarding (controls help, hint overlay, status reminder), focus management + a11y modals, touch fire charging |
-| F4 | Prezentácia, mobil, prístupnosť | 🔄 | ⏳ | rc/f4-presentation-mobile-a11y | Focus trap + focus obnovenie v modáli, autoFocus na prvý button, dotykové tlačidlo OHEŇ s nabíjacou spätnou väzbou |
-| F5 | Kazety a Didaktik | ⏳ | ❌ | — | — |
+| F4 | Prezentácia, mobil, prístupnosť | ✅ hotové | ✅ | PR #8 (merged do main) | Focus management (save/restore + autoFocus v 5 modáli), dotykové tlačidlo OHEŇ s nabíjacou spätnou väzbou |
+| F5 | Kazety a Didaktik | 🔄 | ⏳ | rc/f5-kazety-didaktik | basicSource.test.ts (15 testov Sinclair BASIC), chiptuneAssets.test.ts (11 testov 1-bit SFX/melódie), 125/125 celkových testov |
 | F6 | Manuál a tlač | ⏳ | ❌ | — | — |
 | F7 | Architektúra a kvalita kódu | ⏳ | ❌ | — | — |
 | F8 | Testy a QA | ⏳ | ❌ | — | — |

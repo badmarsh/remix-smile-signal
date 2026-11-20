@@ -653,6 +653,33 @@ function releaseEnemyToken(world: GameWorld, enemy: Enemy): void {
   }
 }
 
+/** True when the given pixel position stands on a timed-arena exit tile ('E'). */
+function isExitTile(stage: StageDefinition, x: number, y: number): boolean {
+  const col = Math.floor(x / TILE_SIZE);
+  const row = Math.floor(y / TILE_SIZE);
+  if (col < 0 || col >= GRID_COLS || row < 0 || row >= GRID_ROWS) return false;
+  return stage.grid[row][col] === 'E';
+}
+
+/** Partner charge AoE blast: bubbles nearby enemies within the charge radius. */
+function triggerPartnerBlast(world: GameWorld): void {
+  const p = world.player;
+  const config = world.stage.partnerChargeConfig;
+  const radius = config?.radius ?? 48;
+
+  for (const enemy of world.enemies) {
+    if (enemy.state === 'ko') continue;
+    if (Math.hypot(enemy.x - p.x, enemy.y - p.y) < radius) {
+      trapEnemyInBubble(world, enemy);
+    }
+  }
+
+  spawnParticles(world, p.x, p.y, 20, ZX_PALETTE.brightCyan, 60, 0.4);
+  world.audioQueue.push({ type: 'bubblePop' });
+  world.borderFlashColor = ZX_PALETTE.brightCyan;
+  world.borderFlashTimer = 0.2;
+}
+
 function triggerSaboteurDash(world: GameWorld, moveX: number, moveY: number): void {
   const p = world.player;
   if (p.dashCooldown > 0 || p.dashTimer > 0) return;
@@ -1299,6 +1326,15 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
   const simDt = dt;
   world.elapsedSec += simDt;
 
+  // --- Timed arena countdown (Phase B) ---
+  if (world.playMode === 'timed_arena' && world.modeTimer > 0) {
+    world.modeTimer = Math.max(0, world.modeTimer - simDt);
+    if (world.modeTimer <= 0) {
+      world.defeatBeatTimer = 0.55;
+      world.audioQueue.push({ type: 'gameOver' });
+    }
+  }
+
   // Decay combo timer
   if (world.comboTimer > 0) {
     world.comboTimer = Math.max(0, world.comboTimer - simDt);
@@ -1422,6 +1458,35 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     p.partnerX += (desiredPX - p.partnerX) * Math.min(1, simDt * 6.5);
     p.partnerY += (desiredPY - p.partnerY) * Math.min(1, simDt * 6.5);
     p.partnerFacing = p.facing;
+  }
+
+  // --- Timed arena exit detection & partner charge (Phase B) ---
+  if (world.playMode === 'timed_arena') {
+    // Exit tile 'E': reaching it from any direction advances to relay repair.
+    if (!world.relaySolved && isExitTile(world.stage, p.x, p.y)) {
+      world.playMode = 'relay_repair';
+      world.modeTimer = 0;
+      world.relaySolved = false;
+      world.partnerChargeProgress = 0;
+      world.chronicleText = 'ZÓNA PREBEDZENÁ! PRECHOD NA OPRAVU RELÉ!';
+      world.chronicleTimer = 3.0;
+      world.audioQueue.push({ type: 'stageClear' });
+      spawnParticles(world, p.x, p.y, 24, ZX_PALETTE.brightGreen, 70, 0.5);
+    }
+
+    // Partner charge: fills while fire is held, releases AoE blast on release.
+    if (input.fireHeld && world.partnerChargeProgress < 1) {
+      const chargeRate = 1.0 / (world.stage.partnerChargeConfig?.chargeDuration ?? 1.5);
+      world.partnerChargeProgress = Math.min(1, world.partnerChargeProgress + simDt * chargeRate);
+    }
+    // Detect release: fire was charging but is no longer held.
+    if (!input.fireHeld && world.partnerChargeProgress > 0) {
+      const sufficient = world.partnerChargeProgress >= 0.5;
+      if (sufficient) {
+        triggerPartnerBlast(world);
+      }
+      world.partnerChargeProgress = 0;
+    }
   }
 
   if (input.fireJustPressed) {

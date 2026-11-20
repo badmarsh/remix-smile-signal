@@ -63,3 +63,17 @@ CLI nástroje:
 - PlayMode union: 'normal' | 'deploy_select' | 'timed_arena' | 'relay_repair' | 'wave_defense'. Nové polia v GameWorld/HudSnapshot sú additive a inicializujú sa v loadStage() s bezpečnými predvolenými hodnotami.
 - Kroky hudby sú semitóny od C4 (C4=0, D4=2, E4=4, G4=7, C5=12, C6=24).
 - Respektuj WAV formát: 44100 Hz mono 16-bit PCM, square wave, zx35 timing.
+
+## Deterministické testovanie (State Hash + Golden Replays)
+
+- src/game/hash.ts obsahuje simStateHash(world) — FNV-1a fingerprint herného stavu (gameplay-relevantné polia len; vylúčené sú čiestky, snehové vločky, afterimages, chronicle, border flash, trauma, hitstop, audio fronta, citizen speech).
+- simStateString(world) serializuje stav v pevnom poradí kľúčov, polia zoradené podľa id — deterministické naprieč behmi.
+- cloneWorld(world) vytvorí hlbokú kópiu pre counterfactual forking: rozvetvenie v kroku k, zmena jednej premennej, obnovenie z k+1, porovnanie hashov so zlatým behom.
+- Každý nový režim hry (PlayMode) potrebuje zlatý replay test: rovnaké vstupy -> rovnaký hash, rôzne vstupy -> rozlíšený hash.
+- Hash sa nesmie meniť pri zmene len prezentačného stavu (čiestky, sneh, blikanie okraja, chronický text).
+
+## Schémy testov (z výskumu AI-agent gamedev)
+
+- Golden replay: 3 behy za režim (čakanie, aktívna hra, dokončenie), hash každých N tikov + finálny hash, CI overuje identickosť.
+- Counterfactual forking: uložiť stav v kroku k, mutate premennú (napr. prah partnerCharge 0.3 vs 0.5), obnoviť z k+1, overiť rozlúčku hashov.
+- Všetky testy musia prechádzať v Node.js (node:test) bez DOM, bez prehliadača.

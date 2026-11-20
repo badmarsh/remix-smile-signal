@@ -77,7 +77,7 @@ test('full arc flow: deploy_select → timed_arena → relay_repair → wave_def
   assert.equal(world.playMode, 'wave_defense', 'Relay solved → wave_defense');
   assert.equal(world.relaySolved, true);
 
-  // --- Phase D: Wave Defense → all waves cleared + hub intact → victory ---
+  // --- Phase D: Wave Defense → all waves cleared + hub intact → stage_clear → Finale ---
   const totalWaves = world.stage.totalWaves ?? world.stage.waves?.length ?? 0;
   world.currentWave = totalWaves;
   world.enemiesToSpawn = 0;
@@ -85,7 +85,13 @@ test('full arc flow: deploy_select → timed_arena → relay_repair → wave_def
   world.boss = null;
   world.hubHp = 3;
   stepWorld(world, 0.016, IDLE_INPUT);
-  assert.equal(world.phase, 'victory', 'All waves + hub intact → victory');
+  assert.equal(world.phase, 'stage_clear', 'All waves + hub intact → stage_clear');
+  // Expire stage_clear timer → loads Finale stage (index 5)
+  for (let i = 0; i < 80; i++) {
+    stepWorld(world, 0.016, IDLE_INPUT);
+  }
+  assert.equal(world.phase, 'playing', 'After stage_clear → Finale (playing)');
+  assert.equal(world.stage.id, 'finale', 'Stage 7 → Finale transition');
 });
 
 test('1P ↔ 2P mid-stage toggle preserves play mode and entities', () => {

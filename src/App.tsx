@@ -25,7 +25,7 @@ import {
   swapActiveHero,
   toggleCoopMode,
 } from './game/engine';
-import { selectTrackForMode, selectTrackForStage, selectTitleTrack } from './game/music';
+import { selectTrackForPhase, selectTrackForMode, selectTrackForStage } from './game/music';
 import { loadSavedProgress, saveProgress } from './game/progress';
 import { LOGICAL_H, LOGICAL_W, renderDidaktikFrame } from './game/renderer';
 import { AudioChipMode, GameWorld, HudSnapshot, InputState, PlayMode } from './game/types';
@@ -572,15 +572,18 @@ export default function App() {
 
   // Drive Melodik AY-3-8912 / 1-bit Beeper background music across stages and arc modes
   useEffect(() => {
-    if (hud.phase === 'playing' && !overlayOpen && !introVisible && !muted) {
-      if (hud.phase === 'title' || hud.phase === 'handover' || hud.phase === 'victory') {
-        didaktikAudio.startMusic(selectTitleTrack());
-      } else if (hud.playMode !== 'normal') {
-        didaktikAudio.startMusic(selectTrackForMode(hud.playMode, hud.bossActive));
-      } else {
-        didaktikAudio.startMusic(selectTrackForStage(hud.stageIndex, hud.bossActive));
-      }
-    } else if (!tapeKitOpen) {
+    const track = selectTrackForPhase(
+      hud.phase,
+      hud.playMode,
+      hud.stageIndex,
+      hud.bossActive,
+      overlayOpen || introVisible || tapeKitOpen,
+      muted
+    );
+
+    if (track) {
+      didaktikAudio.startMusic(track);
+    } else {
       didaktikAudio.stopMusic();
     }
   }, [hud.phase, hud.stageIndex, hud.bossActive, hud.playMode, overlayOpen, introVisible, muted, tapeKitOpen]);

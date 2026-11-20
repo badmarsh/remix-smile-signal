@@ -1,4 +1,4 @@
-import type { PlayMode } from './types';
+import type { GamePhase, PlayMode } from './types';
 
 /**
  * Decoupled 3-channel Didaktik Melodik (AY-3-8912) & 1-bit Beeper music sequencer data.
@@ -210,6 +210,49 @@ export function selectTrackForMode(
     case 'normal':
     default:
       return 'microdent';
+  }
+}
+
+/**
+ * Selects the Melodik AY track for the current game phase, mode, and context.
+ * Pure function — zero DOM dependencies, deterministic.
+ *
+ * Rules:
+ *  - title / handover / victory → vianoce (Christmas carol)
+ *  - gameover → null (silence)
+ *  - paused → null (music paused)
+ *  - playing + bossActive → boss
+ *  - playing + non-normal mode → selectTrackForMode
+ *  - playing + normal → selectTrackForStage
+ *  - overlayOpen or muted → null (silence)
+ *
+ * Returns null when music should stop / not play.
+ */
+export function selectTrackForPhase(
+  phase: GamePhase,
+  playMode: PlayMode,
+  stageIndex: number,
+  bossActive: boolean,
+  overlayOpen: boolean,
+  muted: boolean
+): MelodikTrackId | null {
+  if (muted || overlayOpen) return null;
+
+  switch (phase) {
+    case 'title':
+    case 'handover':
+    case 'victory':
+      return 'vianoce';
+    case 'gameover':
+    case 'paused':
+      return null;
+    case 'playing':
+    case 'stage_clear':
+      if (bossActive) return 'boss';
+      if (playMode !== 'normal') {
+        return selectTrackForMode(playMode, bossActive);
+      }
+      return selectTrackForStage(stageIndex, bossActive);
   }
 }
 

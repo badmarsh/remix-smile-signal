@@ -21,6 +21,7 @@ import {
   SCREEN_W,
   STAGES,
   TILE_SIZE,
+  getStageIndex,
 } from './levels';
 import {
   applyCheckpointPenalty,
@@ -1410,8 +1411,14 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     world.stageClearTimer -= dt;
     updateParticles(world, dt);
     if (world.stageClearTimer <= 0) {
-      if (world.stageIndex + 1 < STAGES.length) {
-        loadStage(world, world.stageIndex + 1, false);
+      // After Service Incident Arc (stage id 'service'), continue to the finale.
+      // Otherwise advance to the next stage by index.
+      const nextIndex =
+        world.stage.id === 'service'
+          ? getStageIndex('finale')
+          : world.stageIndex + 1;
+      if (nextIndex >= 0 && nextIndex < STAGES.length) {
+        loadStage(world, nextIndex, false);
         world.phase = 'playing';
       } else {
         world.phase = 'victory';
@@ -1621,12 +1628,13 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     const totalWaves = world.stage.totalWaves ?? waves?.length ?? 0;
     const waveIdx = world.currentWave;
 
-    // All waves defeated -> victory if hub intact (checked at top level
+    // All waves defeated -> stage_clear if hub intact (checked at top level
     // so it also fires when entering wave_defense with waves already cleared)
     if (waveIdx >= totalWaves && world.hubHp > 0) {
-      world.phase = 'victory';
-      world.bestScore = Math.max(world.bestScore, world.score);
-      world.audioQueue.push({ type: 'victory' });
+      world.phase = 'stage_clear';
+      world.stageClearTimer = 1.25;
+      world.audioQueue.push({ type: 'stageClear' });
+      spawnParticles(world, p.x, p.y, 24, ZX_PALETTE.brightGreen, 75, 0.55);
     }
 
     if (waves && waveIdx < totalWaves) {

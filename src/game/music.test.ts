@@ -5,9 +5,11 @@ import {
   getStepDurationSec,
   isChristmasTrack,
   MELODIK_TRACKS,
+  selectTrackForMode,
   selectTrackForStage,
   selectTitleTrack,
 } from './music';
+import { PlayMode } from './types';
 
 test('Melodik AY jukebox provides 5 distinct valid 3-channel chiptune tracks (incl. Christmas vianoce)', () => {
   assert.equal(MELODIK_TRACKS.length, 5);
@@ -46,4 +48,14 @@ test('isChristmasTrack correctly identifies the vianoce Christmas track', () => 
   assert.equal(isChristmasTrack('vianoce'), true);
   assert.equal(isChristmasTrack('boss'), false);
   assert.equal(isChristmasTrack('microdent'), false);
+});
+
+test('selectTrackForMode assigns Melodik tracks to Service Incident Arc modes', () => {
+  assert.equal(selectTrackForMode('deploy_select', false), 'microdent');
+  assert.equal(selectTrackForMode('timed_arena', false), 'microdent');
+  assert.equal(selectTrackForMode('relay_repair', false), 'rimava');
+  assert.equal(selectTrackForMode('wave_defense', false), 'rimava');
+  assert.equal(selectTrackForMode('normal', false), 'microdent');
+  // Boss takes priority over mode
+  assert.equal(selectTrackForMode('wave_defense', true), 'boss');
 });

@@ -603,9 +603,14 @@ export default function App() {
     let rafId = 0;
     let lastTime = performance.now();
     let lastHudKey = '';
+    // Fixed-timestep accumulator: simulation steps at 60 Hz regardless of
+    // monitor refresh rate, so behaviour is identical on 60/120/144 Hz.
+    let accumulator = 0;
+    const FIXED_DT = 1 / 60;
+    const MAX_ACCUMULATOR = 0.25; // spiral-of-death protection
 
     const frame = (now: number) => {
-      const rawDt = (now - lastTime) / 1000;
+      const rawDt = Math.min((now - lastTime) / 1000, MAX_ACCUMULATOR);
       lastTime = now;
 
       const world = worldRef.current;
@@ -655,7 +660,12 @@ export default function App() {
           dashJustPressedRef.current = false;
           swapJustPressedRef.current = false;
 
-          stepWorld(world, rawDt, input);
+          // Fixed-timestep simulation: multiple sub-steps per frame if needed
+          accumulator += rawDt;
+          while (accumulator >= FIXED_DT) {
+            stepWorld(world, FIXED_DT, input);
+            accumulator -= FIXED_DT;
+          }
 
           const events = drainAudioQueue(world);
           if (events.length > 0) {

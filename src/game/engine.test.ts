@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorld, getHudSnapshot, loadStage, startNewGame, stepWorld } from './engine';
+import { simStateHash } from './hash';
 import { STAGES } from './levels';
 import { InputState } from './types';
 
@@ -171,4 +172,47 @@ test('defeat is reachable when player loses all 3 vitality hearts', () => {
   const snap = getHudSnapshot(world);
   assert.equal(snap.hp, 0);
   assert.equal(snap.damageTaken, 3);
+});
+
+test('fixed timestep determinism: identical fixed-dt steps with identical inputs yield identical hash', () => {
+  const FIXED_DT = 1 / 60;
+  const input = { ...IDLE_INPUT, right: true };
+
+  // Run A: 100 fixed-dt steps
+  const worldA = createWorld('playing');
+  loadStage(worldA, 0, true);
+  for (let i = 0; i < 100; i++) {
+    stepWorld(worldA, FIXED_DT, input);
+  }
+  const hashA = simStateHash(worldA);
+
+  // Run B: same 100 fixed-dt steps, independent world
+  const worldB = createWorld('playing');
+  loadStage(worldB, 0, true);
+  for (let i = 0; i < 100; i++) {
+    stepWorld(worldB, FIXED_DT, input);
+  }
+  const hashB = simStateHash(worldB);
+
+  assert.equal(hashA, hashB, 'Fixed timestep: identical steps + inputs = identical hash');
+});
+
+test('fixed timestep: different inputs produce different hashes', () => {
+  const FIXED_DT = 1 / 60;
+
+  const worldA = createWorld('playing');
+  loadStage(worldA, 0, true);
+  for (let i = 0; i < 100; i++) {
+    stepWorld(worldA, FIXED_DT, { ...IDLE_INPUT, right: true });
+  }
+  const hashA = simStateHash(worldA);
+
+  const worldB = createWorld('playing');
+  loadStage(worldB, 0, true);
+  for (let i = 0; i < 100; i++) {
+    stepWorld(worldB, FIXED_DT, { ...IDLE_INPUT, left: true });
+  }
+  const hashB = simStateHash(worldB);
+
+  assert.notEqual(hashA, hashB, 'Different inputs should produce different hashes');
 });

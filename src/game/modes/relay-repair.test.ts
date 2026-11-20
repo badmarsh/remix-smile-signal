@@ -111,8 +111,11 @@ test('relay repair partner assist: solo player can connect both endpoints alone'
   world.player.y = fibers[1].y;
   stepWorld(world, 0.016, IDLE_INPUT);
   assert.equal(world.relaySolved, true, 'Solo player can connect both endpoints');
+  // Solving the relay auto-advances to wave_defense
+  assert.equal(world.playMode, 'wave_defense', 'Relay solved auto-advances to wave_defense');
 
   const snap = getHudSnapshot(world);
-  assert.equal(snap.playMode, 'relay_repair');
+  assert.equal(snap.playMode, 'wave_defense');
+  assert.equal(snap.relaySyncProgress, 1, 'Relay sync full once solved');
   assert.equal(snap.selectedZone, 0, 'selectedZone is exposed on the HUD snapshot');
 });

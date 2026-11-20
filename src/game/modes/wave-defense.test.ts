@@ -139,8 +139,8 @@ test('all waves defeated + hub intact triggers victory', () => {
   const world = waveWorld();
   const totalWaves = world.stage.totalWaves ?? world.stage.waves?.length ?? 0;
 
-  // Advance through all waves by setting currentWave to the last and clearing enemies
-  world.currentWave = totalWaves - 1;
+  // Advance through all waves: currentWave == totalWaves means all waves done
+  world.currentWave = totalWaves;
   world.enemiesToSpawn = 0;
   world.enemies = [];
   world.boss = null;

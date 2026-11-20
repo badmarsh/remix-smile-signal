@@ -487,6 +487,16 @@ export function restartCurrentRun(world: GameWorld): void {
  */
 export function continueFromCheckpoint(world: GameWorld): void {
   const targetStage = Math.max(0, Math.min(STAGES.length - 1, world.checkpointStageIndex));
+  // Preserve in-progress Service Incident Arc mode across checkpoint reloads
+  const savedPlayMode = world.playMode;
+  const savedModeTimer = world.modeTimer;
+  const savedCurrentWave = world.currentWave;
+  const savedEnemiesToSpawn = world.enemiesToSpawn;
+  const savedSpawnAccumulator = world.spawnAccumulator;
+  const savedPartnerChargeProgress = world.partnerChargeProgress;
+  const savedSelectedZone = world.selectedZone;
+  const savedRelaySolved = world.relaySolved;
+  const savedHubHp = world.hubHp;
   world.score = applyCheckpointPenalty(world.checkpointScore);
   world.combo = 0;
   world.comboTimer = 0;
@@ -496,6 +506,15 @@ export function continueFromCheckpoint(world: GameWorld): void {
   world.player.hp = world.player.maxHp;
   world.phase = 'playing';
   loadStage(world, targetStage, false);
+  world.playMode = savedPlayMode;
+  world.modeTimer = savedModeTimer;
+  world.currentWave = savedCurrentWave;
+  world.enemiesToSpawn = savedEnemiesToSpawn;
+  world.spawnAccumulator = savedSpawnAccumulator;
+  world.partnerChargeProgress = savedPartnerChargeProgress;
+  world.selectedZone = savedSelectedZone;
+  world.relaySolved = savedRelaySolved;
+  world.hubHp = savedHubHp;
 }
 
 /**
@@ -1595,6 +1614,14 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     const totalWaves = world.stage.totalWaves ?? waves?.length ?? 0;
     const waveIdx = world.currentWave;
 
+    // All waves defeated -> victory if hub intact (checked at top level
+    // so it also fires when entering wave_defense with waves already cleared)
+    if (waveIdx >= totalWaves && world.hubHp > 0) {
+      world.phase = 'victory';
+      world.bestScore = Math.max(world.bestScore, world.score);
+      world.audioQueue.push({ type: 'victory' });
+    }
+
     if (waves && waveIdx < totalWaves) {
       const wave = waves[waveIdx];
       const waveTotal = wave.enemyComposition.reduce((sum, c) => sum + c.count, 0);
@@ -1610,14 +1637,7 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
       if (world.enemiesToSpawn <= 0 && world.enemies.length === 0 && bossDead) {
         world.currentWave += 1;
         world.spawnAccumulator = 0;
-        if (world.currentWave >= totalWaves) {
-          // All waves defeated -> victory if hub intact
-          if (world.hubHp > 0) {
-            world.phase = 'victory';
-            world.bestScore = Math.max(world.bestScore, world.score);
-            world.audioQueue.push({ type: 'victory' });
-          }
-        } else {
+        if (world.currentWave < totalWaves) {
           // Start next wave
           const nextWave = waves[world.currentWave];
           world.enemiesToSpawn = nextWave.enemyComposition.reduce(
@@ -1775,6 +1795,15 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
       const b = fiberEndpoints[1];
       if (a.restored && b.restored && !world.relaySolved) {
         world.relaySolved = true;
+        // Auto-advance Phase C → Phase D (wave defense)
+        world.playMode = 'wave_defense';
+        world.currentWave = 0;
+        world.hubHp = 3;
+        const firstWave = world.stage.waves?.[0];
+        world.enemiesToSpawn = firstWave
+          ? firstWave.enemyComposition.reduce((s, c) => s + c.count, 0)
+          : 0;
+        world.spawnAccumulator = 0;
         world.chronicleText = 'RELÉ SPOJENÉ! PRECHOD NA OBRANU CENTRA!';
         world.chronicleTimer = 3.0;
         world.audioQueue.push({ type: 'stageClear' });
@@ -2188,7 +2217,11 @@ export function getHudSnapshot(world: GameWorld): HudSnapshot {
     totalWaves: world.playMode === 'wave_defense' ? Math.max(1, stageWavesTotal(world.stage)) : undefined,
     partnerChargeRatio: world.partnerChargeProgress,
     relaySyncProgress:
-      world.playMode === 'relay_repair' ? relaySyncCoverage(world) : 0,
+      world.relaySolved
+        ? 1
+        : world.playMode === 'relay_repair'
+          ? relaySyncCoverage(world)
+          : 0,
     selectedZone: world.selectedZone,
   };
 }

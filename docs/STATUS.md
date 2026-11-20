@@ -1,8 +1,8 @@
 # docs/STATUS.md — Release Candidate v1.0.0-rc.1
 
-Stav: **F1 — Kritické chyby (P0)** (priebežne aktualizované po každej fáze)
+Stav: **F3 — Hrateľnosť, balans, onboarding** (priebežne aktualizované po každej fáze)
 Aktualizované: 20. 11. 2026
-HEAD: e821441 + PR #4 (Merge rc/f0-baseline)
+HEAD: 9973745 (main + F0, F1 merged)
 
 ## Baseline (F0.1 — DOKONČENÉ)
 

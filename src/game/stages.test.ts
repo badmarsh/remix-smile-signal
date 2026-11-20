@@ -22,7 +22,7 @@ const IDLE: InputState = {
   swapHeroJustPressed: false,
 };
 
-test('all 6 stages have valid 32x24 grids and safe spawns away from walls, water, locked doors, and active hazards', () => {
+test('all 7 stages have valid 32x24 grids and safe spawns away from walls, water, locked doors, and active hazards', () => {
   for (const stage of STAGES) {
     assert.equal(stage.grid.length, GRID_ROWS, `Stage ${stage.index} must have 24 rows`);
     for (let r = 0; r < GRID_ROWS; r++) {
@@ -230,4 +230,102 @@ test('Stage 5 locked museum vault doors block entry until Kronika 1270 relic unl
     world.player.y < 8 * TILE_SIZE,
     `Player must pass cleanly into the museum vault once unlocked (y=${world.player.y})`
   );
+});
+
+test('F2: all 7 stages have complete Slovak content (title, subtitle, chronicle, relic, tags)', () => {
+  assert.equal(STAGES.length, 7, 'Expected exactly 7 stages');
+
+  const stageIds = STAGES.map((s) => s.id);
+  assert.deepEqual(stageIds, [
+    'clinic', 'endo', 'teatro', 'rimava_muzeum', 'rimava_vault', 'finale', 'service',
+  ]);
+
+  for (const stage of STAGES) {
+    // Title & subtitle must be non-empty Slovak strings
+    assert.ok(stage.title && stage.title.length > 0, `Stage ${stage.index} missing title`);
+    assert.ok(stage.subtitle && stage.subtitle.length > 0, `Stage ${stage.index} missing subtitle`);
+    assert.ok(
+      stage.openingChronicle && stage.openingChronicle.length > 0,
+      `Stage ${stage.index} missing openingChronicle`
+    );
+
+    // Company/location tags in Slovak
+    assert.ok(stage.companyTag && stage.companyTag.length > 0, `Stage ${stage.index} missing companyTag`);
+    assert.ok(stage.locationTag && stage.locationTag.length > 0, `Stage ${stage.index} missing locationTag`);
+    assert.ok(stage.retroHomage && stage.retroHomage.length > 0, `Stage ${stage.index} missing retroHomage`);
+
+    // Relic must have name and chronicle note (Slovak)
+    assert.ok(stage.relic.name && stage.relic.name.length > 0, `Stage ${stage.index} relic missing name`);
+    assert.ok(
+      stage.relic.chronicleNote && stage.relic.chronicleNote.length > 0,
+      `Stage ${stage.index} relic missing chronicleNote`
+    );
+
+    // Stage index matches position in array
+    assert.equal(stage.index, STAGES.indexOf(stage), `Stage ${stage.id} index mismatch`);
+
+    // Targets must have valid kinds
+    for (const target of stage.targets) {
+      assert.ok(
+        ['caries', 'fiber', 'ornament'].includes(target.kind),
+        `Stage ${stage.index} target has invalid kind: ${target.kind}`
+      );
+    }
+
+    // Pickups must have valid kinds
+    for (const pickup of stage.pickups) {
+      assert.ok(
+        ['crown', 'coil', 'gift'].includes(pickup.kind),
+        `Stage ${stage.index} pickup has invalid kind: ${pickup.kind}`
+      );
+    }
+
+    // Enemies must have valid archetypes
+    for (const enemy of stage.enemies) {
+      assert.ok(
+        ['patroller', 'kiter', 'charger'].includes(enemy.archetype),
+        `Stage ${stage.index} enemy has invalid archetype: ${enemy.archetype}`
+      );
+    }
+  }
+});
+
+test('F2: stage ordering and ids are unique and sequential', () => {
+  const ids = STAGES.map((s) => s.id);
+  const uniqueIds = new Set(ids);
+  assert.equal(uniqueIds.size, ids.length, 'Stage IDs must be unique');
+
+  const indexes = STAGES.map((s) => s.index);
+  for (let i = 0; i < STAGES.length; i++) {
+    assert.equal(indexes[i], i, `Stage at position ${i} must have index ${i}`);
+  }
+
+  // Finale must be at index 5, service at index 6
+  assert.equal(STAGES[5].id, 'finale', 'Index 5 must be finale');
+  assert.equal(STAGES[6].id, 'service', 'Index 6 must be service');
+
+  // Finale: MVP plaque relic
+  assert.equal(STAGES[5].relic.kind, 'plaque', 'Finale relic must be plaque');
+  // Service: service_key relic, no boss
+  assert.equal(STAGES[6].relic.kind, 'service_key', 'Service relic must be service_key');
+  assert.equal(STAGES[6].bossSpawn, undefined, 'Service stage must not have bossSpawn');
+});
+
+test('F2: all stage titles and chronicles are Slovak (no English-only words)', () => {
+  const englishOnly = /^(The|And|Or|Start|Stop|Play|Pause|Resume|Restart|Menu|Home|Back|Next|Close|Open|Save|Load|Settings|Options|Help|Info|OK|Yes|No|Cancel|Apply|Reset|New|Game|Over|Win|Victory|Score|High|Best|Time|Wave|Stage|Level|Player|Hero|Enemy|Boss|Target|Relic|Coin|Gem|Life|HP|Damage|Combo|Multiplier|Click|Key|Space|Shift|Enter|Esc|WASD|Arrow|Dash|Swap|Fire|Laser|Signal|Bubble|Plaque|Checkpoint|Coop|Tape|Cassette|Manual|Visual|Secret|Room|Studio)$/;
+
+  for (const stage of STAGES) {
+    for (const field of [stage.title, stage.subtitle, stage.openingChronicle, stage.companyTag, stage.locationTag, stage.retroHomage, stage.relic.name, stage.relic.chronicleNote]) {
+      const words = field.split(/[\s·,;:!\-]+/);
+      for (const word of words) {
+        const clean = word.replace(/[\[\]]/g, '').toLowerCase();
+        if (clean.length > 0) {
+          assert.ok(
+            !englishOnly.test(clean),
+            `Stage ${stage.index} field contains English-only word: "${clean}" in "${field}"`
+          );
+        }
+      }
+    }
+  }
 });

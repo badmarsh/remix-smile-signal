@@ -758,6 +758,42 @@ export default function App() {
         </div>
       )}
 
+      {/* Onboarding hint — first 30 s of stage 1 */}
+      {hud.phase === 'playing' &&
+        hud.stageIndex === 0 &&
+        hud.elapsedSec < 30 &&
+        !introVisible && (
+          <div className="no-print pointer-events-none fixed inset-0 z-40 flex flex-col items-center justify-end pb-8">
+            <div className="flex flex-col items-center gap-2 bg-[#000000]/90 border border-[#00e8e8]/40 px-6 py-4 rounded-sm backdrop-blur-sm shadow-[0_24px_70px_rgba(0,0,0,0.9)]">
+              <div className="font-mono text-[#ffee00] font-bold text-xs sm:text-sm tracking-wider">
+                PRVÝ PRÍKLAD — ZÚBOK A SIGNÁLIK
+              </div>
+              <div className="text-center font-mono text-[#c9c6be] text-[11px] sm:text-xs leading-relaxed max-w-xs">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[#00e8e8]">WASD / Šípky</span> — Pohyb
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[#00e8e8]">Medzerník</span> — Streľba
+                  <span className="text-[#8fd8ff]">(drž pre nabíjanie signálu)</span>
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[#00e8e8]">Shift</span> — Saboteúrsky úhyb
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[#00e8e8]">C</span> — Prepni hrdinu (Zúbok ↔ Signálik)
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[#00e8e8]">Esc</span> — Pauza
+                </div>
+                <div className="mt-1 text-[#ff8888] text-[10px]">
+                  Cieľ: Vylúč kazy CEREC laserom, sesbíraj 3D korunku
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+
       {/* Active Gameplay HUD */}
       {showPlayingHud && (
         <div className="no-print">

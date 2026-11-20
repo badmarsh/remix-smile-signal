@@ -1412,11 +1412,14 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     updateParticles(world, dt);
     if (world.stageClearTimer <= 0) {
       // After Service Incident Arc (stage id 'service'), continue to the finale.
+      // After the finale, there is no next stage → victory.
       // Otherwise advance to the next stage by index.
       const nextIndex =
         world.stage.id === 'service'
           ? getStageIndex('finale')
-          : world.stageIndex + 1;
+          : world.stage.id === 'finale'
+            ? STAGES.length // no next stage → victory
+            : world.stageIndex + 1;
       if (nextIndex >= 0 && nextIndex < STAGES.length) {
         loadStage(world, nextIndex, false);
         world.phase = 'playing';

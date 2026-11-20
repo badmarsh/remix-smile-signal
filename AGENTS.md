@@ -77,3 +77,37 @@ CLI nástroje:
 - Golden replay: 3 behy za režim (čakanie, aktívna hra, dokončenie), hash každých N tikov + finálny hash, CI overuje identickosť.
 - Counterfactual forking: uložiť stav v kroku k, mutate premennú (napr. prah partnerCharge 0.3 vs 0.5), obnoviť z k+1, overiť rozlúčku hashov.
 - Všetky testy musia prechádzať v Node.js (node:test) bez DOM, bez prehliadača.
+
+## Multi-agent role roster (z výskumu AI-agent gamedev)
+
+Každý agent má jednu z týchto rolí s definovanými povinnosťami. Každá zmena
+prechádza minimálne cez dva role (napr. LeadDev → QA) pred merge-om.
+
+| Rol | Skratka | Povinnosti |
+|-----|---------|------------|
+| Product Manager | PM | Definuje požiadavky, akceptačné kritériá, prioritu taskov |
+| Architect | ARCH | Drží ARCHITECTURE.md a DESIGN_RULES.md, schvaluje vrstvenie kódu |
+| Lead Developer | LEAD | Implementuje, drží stepWorld ako jednotnú autoritu stavu |
+| QA Engineer | QA | Piše testy pred kódom, overuje npm test = 0 failed, determinizmus |
+| Security | SEC | Kontroluje žiadne DOM v sim, žiadne Math.random, bezpečnosť hashu |
+| DevOps | DEVOPS | CI/CD, tagy, PR merge, tsc --noEmit bez nových chýb |
+
+## Pravidlá spolupráce agentov
+
+- **Human owns architecture.** Človek rozhoduje o vrstvení, agenti implementujú podľa ARCHITECTURE.md.
+- **Screenshot feedback.** Po zmene v rendereri/App.tsx overiť vizuálny výsledok.
+- **Cross-system audits.** Pred merge-om skontrolovať, že zmena neporuší iný modul (napr. music ↔ App.tsx).
+- **Play the game.** QA spustí `npm run dev` a skúsi Stage 7 v týchto režimoch: deploy_select, timed_arena, relay_repair, wave_defense.
+- **GDD is Law.** `docs/service-incident-arc-design.md` je závratný štandard pre Štúpieň 7.
+- **Brutal critic sub-agent.** Každá zmena prechádza recenziou: čo sa zhoršilo, čo je zbytočné, čo by sa malo odstrániť.
+
+## .agent-workflow príkazy
+
+| Príkaz | Popis | Súbor |
+|--------|-------|-------|
+| `do` | Implementovať jeden task (test-first) | `.agent-workflow/do.md` |
+| `integrate` | Zlúčiť feature branch do main | `.agent-workflow/integrate.md` |
+| `clean-code` | Refaktorovať bez zmeny správania | `.agent-workflow/clean-code.md` |
+| `review` | Tri-pass recenzia (integracia, jednoduchosť, správnosť) | `.agent-workflow/review.md` |
+| `dupes` | Nájduť duplikované koncepty | `.agent-workflow/dupes.md` |
+| `map` | Mapa kódovej základny | `.agent-workflow/map.md` |

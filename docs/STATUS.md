@@ -19,7 +19,7 @@ HEAD: e821441 + PR #4 (Merge rc/f0-baseline)
 | Fáza | Názov | Stav | Brána splnená? | Commity | Dôkaz |
 |------|-------|------|----------------|---------|-------|
 | F0 | Základ a poistka | ✅ hotové | ✅ | PR #4 (rc/f0-baseline) | verify.mjs, check-rules.mjs, ci.yml, golden-baseline.json |
-| F1 | Kritické chyby (P0) | 🔄 priebežne | ❌ | — | — |
+| F1 | Kritické chyby (P0) | ✅ hotové | ✅ | PR #5 (rc/f1-critical-fixes) | tsc=0, bot tests, reachability, verify green |
 | F2 | Obsah a slovenčina | ⏳ na radu | ❌ | — | — |
 | F3 | Hrateľnosť, balans, onboarding | ⏳ | ❌ | — | — |
 | F4 | Prezentácia, mobil, prístupnosť | ⏳ | ❌ | — | — |

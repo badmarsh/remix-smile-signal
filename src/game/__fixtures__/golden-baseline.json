@@ -1,0 +1,205 @@
+{
+  "generated": "2026-11-20T10:57:10.169Z",
+  "steps": 300,
+  "dt": 0.016666666666666666,
+  "entries": [
+    {
+      "stageIndex": 0,
+      "stageTitle": "Klinika microDENT",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "90f8d220",
+      "hashFinal": "e108512c",
+      "steps": 300
+    },
+    {
+      "stageIndex": 0,
+      "stageTitle": "Klinika microDENT",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "600e3cec",
+      "hashFinal": "d41bd798",
+      "steps": 300
+    },
+    {
+      "stageIndex": 1,
+      "stageTitle": "Endo & 3D CBCT Lab",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "9a3e7d10",
+      "hashFinal": "e9aade40",
+      "steps": 300
+    },
+    {
+      "stageIndex": 1,
+      "stageTitle": "Endo & 3D CBCT Lab",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "1544c148",
+      "hashFinal": "0c1eb0f8",
+      "steps": 300
+    },
+    {
+      "stageIndex": 2,
+      "stageTitle": "Optický uzol TeatrO",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "8e8048bc",
+      "hashFinal": "63f411c0",
+      "steps": 300
+    },
+    {
+      "stageIndex": 2,
+      "stageTitle": "Optický uzol TeatrO",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "fbc44230",
+      "hashFinal": "f4350ac4",
+      "steps": 300
+    },
+    {
+      "stageIndex": 3,
+      "stageTitle": "Rieka Rimava & Kurinec",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "d400994c",
+      "hashFinal": "4d25bcf4",
+      "steps": 300
+    },
+    {
+      "stageIndex": 3,
+      "stageTitle": "Rieka Rimava & Kurinec",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "fc030258",
+      "hashFinal": "67b0d378",
+      "steps": 300
+    },
+    {
+      "stageIndex": 4,
+      "stageTitle": "Gemersko-malohontské múzeum",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "33d8e9e4",
+      "hashFinal": "3fc0ef88",
+      "steps": 300
+    },
+    {
+      "stageIndex": 4,
+      "stageTitle": "Gemersko-malohontské múzeum",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "13a21038",
+      "hashFinal": "c34a3480",
+      "steps": 300
+    },
+    {
+      "stageIndex": 5,
+      "stageTitle": "Hlavné námestie · Plaketa MVP",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "30373ef8",
+      "hashFinal": "2738ab70",
+      "steps": 300
+    },
+    {
+      "stageIndex": 5,
+      "stageTitle": "Hlavné námestie · Plaketa MVP",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "19acfd00",
+      "hashFinal": "dbe05a78",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "normal",
+      "coop": false,
+      "hashMid": "0d99df00",
+      "hashFinal": "ef1770e8",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "normal",
+      "coop": true,
+      "hashMid": "4db7d620",
+      "hashFinal": "e8c726e0",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "deploy_select",
+      "coop": false,
+      "hashMid": "f3142e68",
+      "hashFinal": "5e8ca120",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "deploy_select",
+      "coop": true,
+      "hashMid": "1a7b97d8",
+      "hashFinal": "2b813418",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "timed_arena",
+      "coop": false,
+      "hashMid": "0c7ddf90",
+      "hashFinal": "7d90c078",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "timed_arena",
+      "coop": true,
+      "hashMid": "fd89e2a0",
+      "hashFinal": "393e7128",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "relay_repair",
+      "coop": false,
+      "hashMid": "c35fe0e0",
+      "hashFinal": "c285cbf8",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "relay_repair",
+      "coop": true,
+      "hashMid": "4165a890",
+      "hashFinal": "f699c840",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "wave_defense",
+      "coop": false,
+      "hashMid": "b97fea40",
+      "hashFinal": "1e6ef5e0",
+      "steps": 300
+    },
+    {
+      "stageIndex": 6,
+      "stageTitle": "Servisný úraz · Rimavská Sobota",
+      "mode": "wave_defense",
+      "coop": true,
+      "hashMid": "f84ab638",
+      "hashFinal": "364fd4c8",
+      "steps": 300
+    }
+  ]
+}

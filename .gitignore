@@ -9,4 +9,5 @@ coverage/
 # Arena / platform artifacts (temp media, brainstorm, snapshots)
 .arena/
 .aistudio/
+.antigravity/
 .superpowers/

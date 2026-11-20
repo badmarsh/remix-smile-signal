@@ -9,7 +9,7 @@
 import { sanitizeZxString } from '../didaktik/basicSource';
 import { SECRET_CODE_SEED } from './dedication';
 
-// TODO: nahradiť skutočnými menami občanov
+// FACT-CHECK: mená občanov (Marek Bakoš, Petra Novotná, Ján Gajdoš, atď.) sú neoverené — potvrdiť pred finálnym odovzdaním
 export const CITIZEN_SIGNATURES: string[] = [
   'Marek Bakoš · Rimavská Sobota (1987)',
   'Petra Novotná · Kurinec — stará škola',

@@ -26,7 +26,7 @@ export const CITIZEN_TRIGGER_RADIUS = 18;
 export const CITIZEN_SPEECH_DURATION = 3.0;
 export const CITIZEN_RETRIGGER_COOLDOWN = 6.0;
 
-// TODO: nahradiť skutočnými menami a hláškami občanov
+// FACT-CHECK: mená občanov (Jana, Marek, Katarína, Tomáš, Peter, atď.) sú neoverené — potvrdiť pred finálnym odovzdaním
 export const STAGE_CITIZENS: readonly CitizenNpc[] = [
   // Stage 1: Klinika microDENT
   {

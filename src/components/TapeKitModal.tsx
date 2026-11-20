@@ -576,13 +576,15 @@ export const TapeKitModal: React.FC<TapeKitModalProps> = ({
               {/* Top Split: User's Actual Didaktik M Photo + Verified Specs */}
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
                 <div className="lg:col-span-5">
-                  <div className="overflow-hidden rounded-sm border border-[#3d4250] bg-[#0b0d12]">
-                    <img
-                      src="./assets/aistudio/image_3bf278e7.png"
-                      alt="Československý retro počítač Didaktik M so šípkami do obráteného T a popismi Sinclair BASIC"
-                      referrerPolicy="no-referrer"
-                      className="h-auto w-full object-cover"
-                    />
+                  <div className="overflow-hidden rounded-sm border border-[#3d4250] bg-[#0b0d12] flex items-center justify-center h-64">
+                    <div className="text-center">
+                      <div className="font-mono text-[10px] text-[#9ea3ae] mb-2 uppercase tracking-wider">
+                        Didaktik M (referenčný kus)
+                      </div>
+                      <div className="w-20 h-12 border-2 border-[#00e8e8] bg-[#0a0d14] mx-auto rounded-sm">
+                        <div className="w-3 h-3 bg-[#1ae62a] rounded mx-auto mt-1" />
+                      </div>
+                    </div>
                   </div>
                   <p className="mt-2 font-mono text-[11px] text-[#9ea3ae]">
                     Didaktik M (Didaktik Skalica, 1990–1993) · Referenčný kus

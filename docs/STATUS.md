@@ -25,8 +25,8 @@ HEAD: main (PR #7+#8+#9+#10+#11 merged — F0+F1+F2+F3+F4+F5+F8 kompletné v mai
 | F3 | Hrateľnosť, balans, onboarding | ✅ hotové | ✅ | PR #7 (merged do main) | F3.1 fixed timestep accumulator, F3.2 onboarding (controls help, hint overlay, status reminder), focus management + a11y modals, touch fire charging |
 | F4 | Prezentácia, mobil, prístupnosť | ✅ hotové | ✅ | PR #8 (merged do main) | Focus management (save/restore + autoFocus v 5 modáli), dotykové tlačidlo OHEŇ s nabíjacou spätnou väzbou |
 | F5 | Kazety a Didaktik | ✅ hotové | ✅ | PR #9 (merged do main) | basicSource.test.ts (15 testov Sinclair BASIC), chiptuneAssets.test.ts (11 testov 1-bit SFX/melódie), 147/147 celkových testov |
-| F6 | Manuál a tlač | 🔄 | ⏳ | rc/f6-manual-tlac | printPack.test.ts (6 testov — karta 63×88 mm, krabička 165×225×38 mm, @media print CSS), 153/153 celkových testov |
-| F7 | Architektúra a kvalita kódu | ⏳ | ❌ | — | — |
+| F6 | Manuál a tlač | ✅ hotové | ✅ | PR #13 (merged do main) | printPack.test.ts (6 testov — karta 63×88 mm, krabička 165×225×38 mm, @media print CSS), dist 2.2 MB pod 5 MB limitom |
+| F7 | Architektúra a kvalita kódu | 🔄 | ⏳ | rc/f7-architektura-kvalita | odstránený aistudio PNG artifact (-1.78 MB), komprimované JPEG (-1.66 MB), FACT-CHECK komentáre pre mená občanov, docs/HUMAN-TODO.md, dist 2.2 MB |
 | F8 | Testy a QA | ✅ hotové | ✅ | PR #11 (merged do main) | dedication.test.ts (12 testov osobného venovania Rado Ceglédymu), specs.test.ts (7 testov Didaktik M hardvéru a ZX palety), 147/147 celkových testov |
 | F9 | Dokumentácia, vydanie, odovzdanie | ✅ hotové | ✅ | PR #12 (merged do main) | docs/RELEASE.md, docs/HANDOFF.md, tag v1.0.0-rc.1, GitHub release |
 

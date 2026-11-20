@@ -1,8 +1,8 @@
 # docs/STATUS.md — Release Candidate v1.0.0-rc.1
 
-Stav: **F8 — Testy a QA** (priebežne aktualizované po každej fáze)
+Stav: **F9 — Dokumentácia, vydanie, odovzdanie** (priebežne aktualizované po každej fáze)
 Aktualizované: 20. 11. 2026
-HEAD: main (PR #7+#8+#9+#10 merged — F0+F1+F2+F3+F4+F5 kompletné v maine)
+HEAD: main (PR #7+#8+#9+#10+#11 merged — F0+F1+F2+F3+F4+F5+F8 kompletné v maine)
 
 ## Baseline (F0.1 — DOKONČENÉ)
 
@@ -10,6 +10,7 @@ HEAD: main (PR #7+#8+#9+#10 merged — F0+F1+F2+F3+F4+F5 kompletné v maine)
 |----------|--------|----------|-------|
 | Inštalácia | `npm install --legacy-peer-deps` | OK | 69 balíkov, 0 zraniteľností |
 | Testy | `npm test` | 147/147 pass, 0 fail | `scripts/run-tests.mjs` |
+| Build | `npm run build` | OK, ~779 ms | JS 470 kB / 137 kB gzip, dist ~7,2 MB |
 | Typy | `npx tsc --noEmit` | 0 chyby | výstup tsc |
 | Build | `npm run build` | OK, ~779 ms | JS 470 kB / 137 kB gzip, dist ~7,2 MB |
 | `--legacy-peer-deps` | nutný? | Áno (peer konflikt) | viz F0.1 |
@@ -26,8 +27,8 @@ HEAD: main (PR #7+#8+#9+#10 merged — F0+F1+F2+F3+F4+F5 kompletné v maine)
 | F5 | Kazety a Didaktik | ✅ hotové | ✅ | PR #9 (merged do main) | basicSource.test.ts (15 testov Sinclair BASIC), chiptuneAssets.test.ts (11 testov 1-bit SFX/melódie), 147/147 celkových testov |
 | F6 | Manuál a tlač | ⏳ | ❌ | — | — |
 | F7 | Architektúra a kvalita kódu | ⏳ | ❌ | — | — |
-| F8 | Testy a QA | 🔄 | ⏳ | rc/f8-testy-qa | dedication.test.ts (12 testov osobného venovania Rado Ceglédymu), specs.test.ts (7 testov Didaktik M hardvéru a ZX palety), 147/147 celkových testov |
-| F9 | Dokumentácia, vydanie, odovzdanie | ⏳ | ❌ | — | — |
+| F8 | Testy a QA | ✅ hotové | ✅ | PR #11 (merged do main) | dedication.test.ts (12 testov osobného venovania Rado Ceglédymu), specs.test.ts (7 testov Didaktik M hardvéru a ZX palety), 147/147 celkových testov |
+| F9 | Dokumentácia, vydanie, odovzdanie | 🔄 | ⏳ | rc/f9-dokumentacia-vydanie-odovzdanie | docs/RELEASE.md, docs/HANDOFF.md, tag v1.0.0-rc.1, GitHub release |
 
 ## Priorita (ak nie je čas na všetko)
 

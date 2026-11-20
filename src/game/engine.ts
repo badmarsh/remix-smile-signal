@@ -35,6 +35,7 @@ import {
   BossState,
   CbctBeamHazard,
   Enemy,
+  EnemyArchetype,
   GamePhase,
   GameWorld,
   HandoverConfetti,
@@ -678,6 +679,95 @@ function triggerPartnerBlast(world: GameWorld): void {
   world.audioQueue.push({ type: 'bubblePop' });
   world.borderFlashColor = ZX_PALETTE.brightCyan;
   world.borderFlashTimer = 0.2;
+}
+
+/** Deterministic edge-tile spawn positions (border tiles that are not walls). */
+function edgeSpawnTiles(stage: StageDefinition): { x: number; y: number }[] {
+  const tiles: { x: number; y: number }[] = [];
+  for (let c = 1; c < GRID_COLS - 1; c++) {
+    if (!isWallTile(stage, c, 0)) tiles.push({ x: c * TILE_SIZE + 4, y: 4 });
+    if (!isWallTile(stage, c, GRID_ROWS - 1))
+      tiles.push({ x: c * TILE_SIZE + 4, y: (GRID_ROWS - 1) * TILE_SIZE + 4 });
+  }
+  for (let r = 1; r < GRID_ROWS - 1; r++) {
+    if (!isWallTile(stage, 0, r)) tiles.push({ x: 4, y: r * TILE_SIZE + 4 });
+    if (!isWallTile(stage, GRID_COLS - 1, r))
+      tiles.push({ x: (GRID_COLS - 1) * TILE_SIZE + 4, y: r * TILE_SIZE + 4 });
+  }
+  return tiles;
+}
+
+/** Archetype at a given spawn index within a wave's composition (deterministic). */
+function waveArchetypeAt(
+  wave: { spawnTimer: number; enemyComposition: { archetype: EnemyArchetype; count: number }[]; description: string },
+  index: number
+): EnemyArchetype | null {
+  let offset = 0;
+  for (const comp of wave.enemyComposition) {
+    if (index < offset + comp.count) return comp.archetype;
+    offset += comp.count;
+  }
+  return null;
+}
+
+function spawnWaveEnemy(
+  world: GameWorld,
+  archetype: EnemyArchetype,
+  x: number,
+  y: number
+): void {
+  const dir = world.enemies.length % 2 === 0 ? 1 : -1;
+  const speedScale = 1 + world.stageIndex * 0.07;
+  world.enemies.push({
+    id: world.nextEntityId++,
+    archetype,
+    act: world.stage.act,
+    x,
+    y,
+    vx: dir * (archetype === 'patroller' ? 30 : 22) * speedScale,
+    vy: archetype === 'kiter' ? 16 * speedScale : 0,
+    hp: archetype === 'charger' ? 2 : 1,
+    maxHp: archetype === 'charger' ? 2 : 1,
+    state: 'move',
+    stateTimer: 1.2 + world.enemies.length * 0.45,
+    bubbleTimer: 0,
+    facing: dir > 0 ? 'right' : 'left',
+    hitFlash: 0,
+    koTimer: 0,
+    orbitAngle: world.enemies.length * 1.4,
+    chargeDirX: 0,
+    chargeDirY: 0,
+    hasAttackToken: false,
+  });
+}
+
+/** Spawn the final-wave boss fragment: 1 weak spot, shorter cycles, simpler AI. */
+function spawnBossFragment(world: GameWorld, x: number, y: number): void {
+  world.boss = {
+    active: true,
+    name: 'RUŠIČ FRÁGMENT',
+    x,
+    y,
+    vx: 24,
+    vy: 0,
+    phase: 1,
+    hp: 1,
+    maxHp: 1,
+    weakSpots: [
+      { id: 1, offsetX: 0, offsetY: 0, hp: 1, maxHp: 1, destroyed: false, hitFlash: 0 },
+    ],
+    state: 'move',
+    stateTimer: 1.2,
+    attackKind: 'none',
+    attackAngle: 0,
+    chargeDirX: 1,
+    chargeDirY: 0,
+    bubbleTimer: 0,
+    hitFlash: 0,
+    hasAttackToken: false,
+    attackCycleIdx: 0,
+    fragment: true,
+  };
 }
 
 function triggerSaboteurDash(world: GameWorld, moveX: number, moveY: number): void {
@@ -1489,6 +1579,83 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
     }
   }
 
+  // --- Wave defense spawning & hub integrity (Phase D) ---
+  if (world.playMode === 'wave_defense') {
+    const waves = world.stage.waves;
+    const totalWaves = world.stage.totalWaves ?? waves?.length ?? 0;
+    const waveIdx = world.currentWave;
+
+    if (waves && waveIdx < totalWaves) {
+      const wave = waves[waveIdx];
+      const waveTotal = wave.enemyComposition.reduce((sum, c) => sum + c.count, 0);
+      const spawned = waveTotal - world.enemiesToSpawn;
+
+      // Accumulate spawn timer (deterministic, no RNG)
+      world.spawnAccumulator += simDt;
+
+      const bossDead =
+        !world.boss || !world.boss.active || world.boss.phase >= 4;
+
+      // Wave complete: nothing left to spawn, no enemies alive, no active boss
+      if (world.enemiesToSpawn <= 0 && world.enemies.length === 0 && bossDead) {
+        world.currentWave += 1;
+        world.spawnAccumulator = 0;
+        if (world.currentWave >= totalWaves) {
+          // All waves defeated -> victory if hub intact
+          if (world.hubHp > 0) {
+            world.phase = 'victory';
+            world.bestScore = Math.max(world.bestScore, world.score);
+            world.audioQueue.push({ type: 'victory' });
+          }
+        } else {
+          // Start next wave
+          const nextWave = waves[world.currentWave];
+          world.enemiesToSpawn = nextWave.enemyComposition.reduce(
+            (sum, c) => sum + c.count,
+            0
+          );
+        }
+      } else if (world.enemiesToSpawn > 0 && world.spawnAccumulator >= wave.spawnTimer) {
+        // Spawn next enemy from a deterministic edge tile (no RNG)
+        world.spawnAccumulator = 0;
+        const tiles = edgeSpawnTiles(world.stage);
+        if (tiles.length > 0) {
+          const tile = tiles[spawned % tiles.length];
+          if (waveIdx === totalWaves - 1) {
+            // Final wave: boss fragment instead of composition enemies
+            spawnBossFragment(world, tile.x, tile.y);
+            world.enemiesToSpawn = 0;
+          } else {
+            const arch = waveArchetypeAt(wave, spawned);
+            if (arch) {
+              spawnWaveEnemy(world, arch, tile.x, tile.y);
+              world.enemiesToSpawn -= 1;
+            }
+          }
+        }
+      }
+    }
+
+    // Hub integrity: enemies touching the central hub tile damage it
+    const hubX = 15 * 8 + 4;
+    const hubY = 11 * 8 + 4;
+    for (const enemy of world.enemies) {
+      if (enemy.state === 'ko') continue;
+      if (Math.hypot(enemy.x - hubX, enemy.y - hubY) < 8) {
+        world.hubHp = Math.max(0, world.hubHp - 1);
+        enemy.state = 'ko';
+        enemy.koTimer = 0.32;
+        world.enemiesDefeated += 1;
+        spawnParticles(world, hubX, hubY, 10, ZX_PALETTE.brightRed, 40, 0.3);
+        world.audioQueue.push({ type: 'enemyHit' });
+        if (world.hubHp <= 0) {
+          world.defeatBeatTimer = 0.55;
+          world.audioQueue.push({ type: 'gameOver' });
+        }
+      }
+    }
+  }
+
   if (input.fireJustPressed) {
     firePlayerWeapon(world);
   }
@@ -1645,7 +1812,34 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
         if (boss.phase === 1) {
           if (Math.hypot(proj.x - boss.x, proj.y - boss.y) < 14) {
             proj.active = false;
-            spawnParticles(world, proj.x, proj.y, 5, ZX_PALETTE.brightCyan, 34, 0.18);
+            if (boss.fragment) {
+              // Fragment: any hit damages the single weak spot directly
+              const spot = boss.weakSpots.find((w) => !w.destroyed);
+              if (spot) {
+                spot.hp -= 1;
+                spot.hitFlash = 0.12;
+                boss.hitFlash = 0.08;
+                world.hitstopTimer = 0.04;
+                world.trauma = Math.min(1, world.trauma + 0.25);
+                world.score += 250;
+                world.bestScore = Math.max(world.bestScore, world.score);
+                spawnParticles(world, proj.x, proj.y, 10, ZX_PALETTE.brightCyan, 48, 0.28);
+                if (spot.hp <= 0) {
+                  spot.destroyed = true;
+                  world.audioQueue.push({ type: 'enemyKo' });
+                } else {
+                  world.audioQueue.push({ type: 'enemyHit' });
+                }
+                if (boss.weakSpots.every((w) => w.destroyed)) {
+                  releaseBossToken(world, boss);
+                  boss.phase = 4;
+                  boss.active = false;
+                  world.audioQueue.push({ type: 'stageClear' });
+                }
+              }
+            } else {
+              spawnParticles(world, proj.x, proj.y, 5, ZX_PALETTE.brightCyan, 34, 0.18);
+            }
           }
         } else if (boss.phase === 2) {
           // Check 3 caries weak spots (vulnerable ONLY to Zúbok's dental_laser)

@@ -181,6 +181,33 @@ const MAP_GALA_2: string[] = [
   '################################',
 ];
 
+const MAP_STAGE_7: string[] = [
+  '################################',
+  '#1...........E...........2.....#',
+  '#..............................#',
+  '#...########.......########....#',
+  '#...#...........E...#..........#',
+  '#...#.................#...3....#',
+  '#..............................#',
+  '#...........########...........#',
+  '#..............................#',
+  '#..##..............##..........#',
+  '#..##..........................#',
+  '#..........................4...#',
+  '#..............................#',
+  '#..##..............##..........#',
+  '#..##..........................#',
+  '#..............................#',
+  '#...........########...........#',
+  '#..............................#',
+  '#...#......................#...#',
+  '#...#......................#...#',
+  '#...####.......##.......####...#',
+  '#..............................#',
+  '#..............................#',
+  '################################',
+];
+
 function tileCenter(col: number, row: number) {
   return {
     x: col * TILE_SIZE + TILE_SIZE / 2,
@@ -477,6 +504,91 @@ export const STAGES: StageDefinition[] = [
       { ...tileCenter(29, 21), archetype: 'kiter' },
       { ...tileCenter(15, 2), archetype: 'patroller' },
       { ...tileCenter(8, 21), archetype: 'patroller' },
+    ],
+  },
+  {
+    index: 6,
+    act: 'gala',
+    title: 'Servisný úraz · Rimavská Sobota',
+    subtitle: '4 zóny · 90 s únik · oprava relé · obrana centra',
+    companyTag: 'Servisný úraz · Finálny blok',
+    locationTag: 'Hlavné námestie · Mestská pamiatková zóna RS',
+    retroHomage: 'Elite, Saboteur!, Bubble Bobble & R-Type',
+    openingChronicle: 'KRONIKA: SERVISNÝ ÚRAZ · VYBER ZÓNU A PREŽI!',
+    borderColorIdx: 1,
+    wallColor: ZX_PALETTE.brightGreen,
+    wallAccent: ZX_PALETTE.brightYellow,
+    floorDotColor: ZX_PALETTE.blue,
+    grid: MAP_STAGE_7,
+    playerStart: tileCenter(15, 11),
+    bossSpawn: tileCenter(15, 10),
+    timeLimitSec: 90,
+    totalWaves: 5,
+    startPlayMode: 'deploy_select',
+    partnerChargeConfig: {
+      chargeDuration: 1.5,
+      radius: 48,
+      damageMultiplier: 2,
+      label: 'SIGNALÍK BLAST',
+    },
+    waves: [
+      {
+        spawnTimer: 2.0,
+        enemyComposition: [{ archetype: 'patroller', count: 3 }],
+        description: 'First outages',
+      },
+      {
+        spawnTimer: 1.8,
+        enemyComposition: [
+          { archetype: 'patroller', count: 2 },
+          { archetype: 'charger', count: 1 },
+        ],
+        description: 'Communication failure',
+      },
+      {
+        spawnTimer: 1.5,
+        enemyComposition: [
+          { archetype: 'kiter', count: 2 },
+          { archetype: 'patroller', count: 2 },
+        ],
+        description: 'Network disruption',
+      },
+      {
+        spawnTimer: 1.2,
+        enemyComposition: [
+          { archetype: 'charger', count: 3 },
+          { archetype: 'kiter', count: 1 },
+        ],
+        description: 'Massive attack',
+      },
+      {
+        spawnTimer: 1.0,
+        enemyComposition: [{ archetype: 'patroller', count: 1 }],
+        description: 'Final anomaly strike',
+      },
+    ],
+    relic: {
+      ...tileCenter(15, 11),
+      kind: 'plaque',
+      name: 'Servisný kľúč',
+      chronicleNote: 'ARTEFAKT: SERVISNÝ KLÚČ (+400)',
+    },
+    targets: [
+      { ...tileCenter(5, 5), kind: 'ornament' },
+      { ...tileCenter(26, 5), kind: 'ornament' },
+      { ...tileCenter(5, 18), kind: 'ornament' },
+      { ...tileCenter(26, 18), kind: 'ornament' },
+      { ...tileCenter(15, 5), kind: 'caries' },
+      { ...tileCenter(15, 18), kind: 'fiber' },
+    ],
+    pickups: [
+      { ...tileCenter(2, 11), kind: 'crown', points: 400 },
+      { ...tileCenter(29, 11), kind: 'crown', points: 400 },
+    ],
+    enemies: [
+      { ...tileCenter(2, 2), archetype: 'patroller' },
+      { ...tileCenter(29, 21), archetype: 'patroller' },
+      { ...tileCenter(15, 2), archetype: 'kiter' },
     ],
   },
 ];

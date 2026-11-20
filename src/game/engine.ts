@@ -42,6 +42,7 @@ import {
   InputState,
   Particle,
   Snowflake,
+  StageDefinition,
   UvBeamHazard,
 } from './types';
 
@@ -277,6 +278,15 @@ export function createWorld(initialPhase: GamePhase = 'title', bestScore = 0): G
     pokePromptVisible: false,
     coopEnabled: false,
     audioQueue: [],
+    playMode: 'normal',
+    modeTimer: 0,
+    currentWave: 0,
+    enemiesToSpawn: 0,
+    spawnAccumulator: 0,
+    partnerChargeProgress: 0,
+    selectedZone: 0,
+    relaySolved: false,
+    hubHp: 0,
   };
 
   loadStage(world, 0, true);
@@ -364,6 +374,19 @@ export function loadStage(world: GameWorld, stageIndex: number, fullReset = fals
 
   world.doorsOpen = !stage.doorsUnlockedByRelic;
   world.citizenSpeech = createCitizenSpeechState();
+
+  // --- Service Incident Arc mode fields (Gate 0) ---
+  // Boot into the stage's declared mode, falling back to 'normal' for existing stages.
+  world.playMode = stage.startPlayMode ?? 'normal';
+  world.modeTimer = stage.timeLimitSec ?? 0;
+  world.currentWave = 0;
+  world.enemiesToSpawn = 0;
+  world.spawnAccumulator = 0;
+  world.partnerChargeProgress = 0;
+  world.selectedZone = 0;
+  world.relaySolved = false;
+  // Hub integrity for wave_defense: central hub tile takes 3 hits before falling.
+  world.hubHp = world.playMode === 'wave_defense' ? 3 : 0;
 
   world.targets = stage.targets.map((t, idx) => ({
     id: world.nextEntityId++,
@@ -1860,7 +1883,19 @@ export function getHudSnapshot(world: GameWorld): HudSnapshot {
     radoPokeMode: world.radoPokeMode,
     pokePromptVisible: world.pokePromptVisible,
     coopEnabled: world.coopEnabled,
+    playMode: world.playMode,
+    modeTimer: world.modeTimer,
+    timeRemaining: world.playMode === 'timed_arena' ? Math.max(0, world.modeTimer) : undefined,
+    currentWave: world.playMode === 'wave_defense' ? world.currentWave : undefined,
+    totalWaves: world.playMode === 'wave_defense' ? Math.max(1, stageWavesTotal(world.stage)) : undefined,
+    partnerChargeRatio: world.partnerChargeProgress,
+    relaySyncProgress: world.relaySolved ? 1 : 0,
   };
+}
+
+/** Total wave count for the current stage's wave_defense setup. */
+function stageWavesTotal(stage: StageDefinition): number {
+  return stage.totalWaves ?? stage.waves?.length ?? 0;
 }
 
 export function drainAudioQueue(world: GameWorld) {

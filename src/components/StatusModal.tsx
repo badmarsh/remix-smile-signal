@@ -138,6 +138,39 @@ export const StatusModal: React.FC<StatusModalProps> = ({
           <span>Zásahy {hud.damageTaken}</span>
         </div>
 
+        {/* Controls reminder for paused / gameover screens */}
+        <div className="mt-4 rounded-sm border border-[#2b303c] bg-[#0b0f18] p-3">
+          <div className="font-mono text-[10px] font-bold text-[#00e8e8] uppercase tracking-wider mb-2">
+            Ovládanie
+          </div>
+          <div className="grid grid-cols-2 gap-2 font-mono text-xs text-[#c9c6be]">
+            <div className="flex items-center gap-1">
+              <span className="text-[#ffee00]">WASD / Šípky</span>
+              <span>— pohyb</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[#ffee00]">Medzerník</span>
+              <span>— streľba</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[#ffee00]">Shift</span>
+              <span>— saboteúrsky úhyb</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[#ffee00]">C</span>
+              <span>— prepni hrdinu</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[#ffee00]">Esc</span>
+              <span>— pauza</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[#ffee00]">[2]</span>
+              <span>— 2P ko-op</span>
+            </div>
+          </div>
+        </div>
+
         {isVictory && (
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#232938] pt-3.5">
             <MicrodentLogo compact />

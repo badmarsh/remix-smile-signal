@@ -2,15 +2,15 @@
 
 Stav: **F3 — Hrateľnosť, balans, onboarding** (priebežne aktualizované po každej fáze)
 Aktualizované: 20. 11. 2026
-HEAD: 9973745 (main + F0, F1 merged)
+HEAD: d8e7987 (rc/f3-gameplay-balance, F3.1 fixed timestep + F3.2 onboarding committed)
 
 ## Baseline (F0.1 — DOKONČENÉ)
 
 | Kontrola | Príkaz | Výsledok | Dôkaz |
 |----------|--------|----------|-------|
 | Inštalácia | `npm install --legacy-peer-deps` | OK | 69 balíkov, 0 zraniteľností |
-| Testy | `npm test` | 84/84 pass, 0 fail | `scripts/run-tests.mjs` |
-| Typy | `npx tsc --noEmit` | 3 chyby (App.tsx:576, P0-2) | výstup tsc |
+| Testy | `npm test` | 99/99 pass, 0 fail | `scripts/run-tests.mjs` |
+| Typy | `npx tsc --noEmit` | 0 chyby | výstup tsc |
 | Build | `npm run build` | OK, ~779 ms | JS 470 kB / 137 kB gzip, dist ~7,2 MB |
 | `--legacy-peer-deps` | nutný? | Áno (peer konflikt) | viz F0.1 |
 
@@ -21,7 +21,7 @@ HEAD: 9973745 (main + F0, F1 merged)
 | F0 | Základ a poistka | ✅ hotové | ✅ | PR #4 (rc/f0-baseline) | verify.mjs, check-rules.mjs, ci.yml, golden-baseline.json |
 | F1 | Kritické chyby (P0) | ✅ hotové | ✅ | PR #5 (rc/f1-critical-fixes) | tsc=0, bot tests, reachability, verify green |
 | F2 | Obsah a slovenčina | ⏳ na radu | ❌ | — | — |
-| F3 | Hrateľnosť, balans, onboarding | ⏳ | ❌ | — | — |
+| F3 | Hrateľnosť, balans, onboarding | 🔄 | ⏳ | rc/f3-gameplay-balance | F3.1 fixed timestep (commit d8e7987), F3.2 onboarding (CassetteIntroOverlay controls help, App.tsx hint overlay, StatusModal controls reminder) |
 | F4 | Prezentácia, mobil, prístupnosť | ⏳ | ❌ | — | — |
 | F5 | Kazety a Didaktik | ⏳ | ❌ | — | — |
 | F6 | Manuál a tlač | ⏳ | ❌ | — | — |

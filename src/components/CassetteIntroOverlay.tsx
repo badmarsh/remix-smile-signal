@@ -152,6 +152,37 @@ export const CassetteIntroOverlay: React.FC<CassetteIntroOverlayProps> = ({
           Preskočiť [Ľubovoľná klávesa]
         </button>
       </div>
+
+      {/* Onboarding: controls help shown once before first play */}
+      <div className="mt-4 flex w-full max-w-2xl flex-col items-start gap-1 font-mono text-xs text-[#9ea3ae]">
+        <div className="font-mono text-[10px] font-bold text-[#00e8e8] uppercase tracking-wider mb-1">
+          Ovládanie
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#ffee00]">WASD / Šípky</span>
+          <span>— pohyb</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#ffee00]">Medzerník</span>
+          <span>— streľba (drž pre nabíjanie)</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#ffee00]">Shift</span>
+          <span>— saboteúrsky úhyb</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#ffee00]">C</span>
+          <span>— prepni hrdinu (Zúbok ↔ Signálik)</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#ffee00]">Esc</span>
+          <span>— pauza</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#ffee00]">2P ko-op</span>
+          <span>— [2] v úvodnej obrazovke</span>
+        </div>
+      </div>
     </div>
   );
 };

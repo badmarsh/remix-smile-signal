@@ -7,7 +7,7 @@ Webová ZX Spectrum / Didaktik M 256x192 px arkáda + generátor kaziet (.TAP / 
 
     npm install --legacy-peer-deps
     npm run dev    # http://localhost:3000
-    npm test       # 47+ deterministických unit testov
+    npm test       # 70+ deterministických unit testov (vrátane Service Incident Arc Štúpieň 7)
     npm run build  # offline balík dist/
 
 ## Architektúra
@@ -30,10 +30,10 @@ Webová ZX Spectrum / Didaktik M 256x192 px arkáda + generátor kaziet (.TAP / 
 
 | ID | Skladba | BPM | Použitie |
 |---|---|---|---|
-| microdent | Klinika microDENT | 128 | Stages 0-1 |
+| microdent | Klinika microDENT | 128 | Stages 0-1 · Stage 7 deploy_select / timed_arena |
 | teatro | Optický impulz TeatrO | 136 | Stage 2 |
-| rimava | Rimavská Sobota: Zimný večer | 118 | Stages 3-4 |
-| boss | Finále: Veľký Rušič | 148 | Boss fight, Stage 5 |
+| rimava | Rimavská Sobota: Zimný večer | 118 | Stages 3-4 · Stage 7 relay_repair / wave_defense |
+| boss | Finále: Veľký Rušič | 148 | Boss fight, Stage 5 (takes priority over Stage 7 mode) |
 | vianoce | Koleda Rimavskej Soboty | 110 | Title, Handover, Victory |
 
 ## MCP servery (pre ZX Spectrum debugging)
@@ -58,6 +58,8 @@ CLI nástroje:
 - Nula DOM závislostí v engine.ts a music.ts — beží deterministicky v Node.js.
 - Fyzikálny čas v sekundách: stepWorld(world, dtSec, input).
 - Po každej zmene: npm test musí dať 0 failed.
-- Používaj selectTitleTrack() pre titulnú obrazovku, selectTrackForStage() pre gameplay.
+- Žiadne Math.random() v engine.ts / music.ts / levels.ts — všetká náhodosť je seeded z konfigurácie alebo mriežky.
+- Používaj selectTitleTrack() pre titulnú obrazovku, selectTrackForStage() pre klasické štúpie, selectTrackForMode() pre Service Incident Arc režimy (deploy_select/timed_arena → microdent, relay_repair/wave_defense → rimava).
+- PlayMode union: 'normal' | 'deploy_select' | 'timed_arena' | 'relay_repair' | 'wave_defense'. Nové polia v GameWorld/HudSnapshot sú additive a inicializujú sa v loadStage() s bezpečnými predvolenými hodnotami.
 - Kroky hudby sú semitóny od C4 (C4=0, D4=2, E4=4, G4=7, C5=12, C6=24).
 - Respektuj WAV formát: 44100 Hz mono 16-bit PCM, square wave, zx35 timing.

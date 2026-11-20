@@ -739,6 +739,7 @@ function waveArchetypeAt(
   return null;
 }
 
+/** Spawn a wave-defense enemy at a given tile position with deterministic stats. */
 function spawnWaveEnemy(
   world: GameWorld,
   archetype: EnemyArchetype,
@@ -1583,6 +1584,9 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
   if (world.playMode === 'timed_arena') {
     // Exit tile 'E': reaching it from any direction advances to relay repair.
     if (!world.relaySolved && isExitTile(world.stage, p.x, p.y)) {
+      // Exit reached before timer expiry takes priority over timer gameover.
+      // Clear any defeat beat armed by the countdown block earlier this frame.
+      world.defeatBeatTimer = 0;
       world.playMode = 'relay_repair';
       world.modeTimer = 0;
       world.relaySolved = false;
@@ -1593,7 +1597,10 @@ export function stepWorld(world: GameWorld, rawDt: number, input: InputState): v
       spawnParticles(world, p.x, p.y, 24, ZX_PALETTE.brightGreen, 70, 0.5);
     }
 
-    // Partner charge: fills while fire is held, releases AoE blast on release.
+    // Partner charge mechanic:
+    // - Fills 0->1 while fireHeld, rate from partnerChargeConfig.chargeDuration (default 1.5s).
+    // - Clamped at 1 (100% - no overcharge). Resets to 0 on release.
+    // - Release at >=0.5 (50% threshold) triggers AoE blast via triggerPartnerBlast.
     if (input.fireHeld && world.partnerChargeProgress < 1) {
       const chargeRate = 1.0 / (world.stage.partnerChargeConfig?.chargeDuration ?? 1.5);
       world.partnerChargeProgress = Math.min(1, world.partnerChargeProgress + simDt * chargeRate);

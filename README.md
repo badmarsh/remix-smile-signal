@@ -56,7 +56,32 @@ V hre stlač **`T`** (alebo klikni na ikonu kazety) a otvorí sa **Kazeta & Dida
 - **Kazetové štúdio**: `T`
 - **Tajná miestnosť 1270**: `K` na úvodnej obrazovke (8-znakový kód je vytlačený na plakete v kapitole 05 a na zberateľskej karte v kapitole 06)
 
-### Priateľský režim pre nehráčov
+## Štúpieň 7 — Servisný úraz (Service Incident Arc)
+
+Štvrtý akt hry predstavuje servisný incident v Rimavskej Sobote s 4 naviazanými fázami:
+
+| Fáza | Režim | Cieľ | Homenáža |
+|------|-------|------|----------|
+| **A** | `deploy_select` | Vyber zónu (1–4) na prehľadnej mape; kliknutím sa priblíži na konkrétny dlaždicový štúpieň | Elite, Lords of Midnight |
+| **B** | `timed_arena` | Prebehni koridor s nebezpečenstvami do 90 s pred vypršaním časom | Saboteur!, R-Type |
+| **C** | `relay_repair` | Spoj dva konce optického kábla (relé); v 1P nosíš spojovač, v 2P každý hráč drží jeden koniec | Bubble Bobble, Dizzy |
+| **D** | `wave_defense` | Chráň centrálny hub proti 5 eskalujúcim vlnám nepriateľov vrátane finálneho fragmentu rušiča | R-Type, Golden Axe |
+
+### Partner charge (fáza B)
+Podrž `Medzerník` na nabíjanie meradla 0→1. Uvoľnenie nad **50 %** spustí AoE vlnu, ktorá uviezne blízkych nepriateľov do bublín. Meradlo sa vynuluje pri dverách východu a je limitované na 100 % (žiadne overcharge).
+
+### Ovládanie v štúpi 7
+- Šípky / `WASD` — pohyb kurzora v deploy_select aj postavy v ostaných fázach
+- `Medzerník` — výber zóny / streľba / nabíjanie partner charge
+- V 2P Co-op: Hráč 2 (Signálik) používa `Šípky` + `Enter` na nezávislý pohyb a strelbu
+
+### Hud v štúpi 7
+- `[TIME: ##s]` — odpočítavanie v timed_arena (stred hore)
+- Meradlo partner charge `|===----|` — spodokľava
+- `[RELAY: ==--->]` — synchronizácia relé v relay_repair (spodok stred)
+- `[WAVE: X/Y]` — počiatočná vlna v wave_defense (stred hore)
+
+---\n\n### Priateľský režim pre nehráčov
 - Po strate životov hra ponúkne **Pokračovať od dosiahnutého kola** (s 20 % penalizáciou skóre namiesto návratu na 1. kolo).
 - Po 2. prehre v tom istom kole sa objaví retro výzva **`POKE 48621,5 – RADO REŽIM? A / N`**, ktorá pridá **+2 srdcia** (spolu 5) a spomalí strely nepriateľov o **30 %**.
 

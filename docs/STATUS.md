@@ -1,10 +1,10 @@
 # docs/STATUS.md — Release Candidate v1.0.0-rc.1
 
-Stav: **F0 — Základ a poistka** (priebežne aktualizované po každej fáze)
+Stav: **F1 — Kritické chyby (P0)** (priebežne aktualizované po každej fáze)
 Aktualizované: 20. 11. 2026
-HEAD: e821441 (Merge PR #3)
+HEAD: e821441 + PR #4 (Merge rc/f0-baseline)
 
-## Baseline (F0.1)
+## Baseline (F0.1 — DOKONČENÉ)
 
 | Kontrola | Príkaz | Výsledok | Dôkaz |
 |----------|--------|----------|-------|
@@ -18,9 +18,9 @@ HEAD: e821441 (Merge PR #3)
 
 | Fáza | Názov | Stav | Brána splnená? | Commity | Dôkaz |
 |------|-------|------|----------------|---------|-------|
-| F0 | Základ a poistka | 🔄 priebežne | ❌ ešte nie | — | — |
-| F1 | Kritické chyby (P0) | ⏳ na radu | ❌ | — | — |
-| F2 | Obsah a slovenčina | ⏳ | ❌ | — | — |
+| F0 | Základ a poistka | ✅ hotové | ✅ | PR #4 (rc/f0-baseline) | verify.mjs, check-rules.mjs, ci.yml, golden-baseline.json |
+| F1 | Kritické chyby (P0) | ✅ hotové | ✅ | PR #5 (rc/f1-critical-fixes) | tsc=0, bot tests, reachability, verify green |
+| F2 | Obsah a slovenčina | ⏳ na radu | ❌ | — | — |
 | F3 | Hrateľnosť, balans, onboarding | ⏳ | ❌ | — | — |
 | F4 | Prezentácia, mobil, prístupnosť | ⏳ | ❌ | — | — |
 | F5 | Kazety a Didaktik | ⏳ | ❌ | — | — |
@@ -37,5 +37,5 @@ F0 → F1 → F3 → F4 → F5 → F2 → F8 → F9 → F6 → F7 (refaktor posl
 
 - 3 TS chyby v App.tsx:576 sú P0-2 (mŕtva vetva title/handover/victory). Pravidlo 11 zmenené: cieľ je `tsc --noEmit = 0`.
 - P0-1: Stage 7 (Servisný úraz) nie je dosiahnuteľný v reálnom toku, len cez testy.
-- P0-3: `.github/` neexistuje, CI pravidlá nie sú vynútené.
-- Hygiena: `.aistudio/`, `.antigravity/`, `.superpowers/` v gite napriek `.gitignore`.
+- P0-3: `.github/` teraz existuje (PR #4), CI pravidlá vynútené cez GitHub Actions.
+- Hygiena: `.aistudio/`, `.antigravity/`, `.superpowers/` odstránené z gite (PR #4).

@@ -147,9 +147,13 @@ test('all waves defeated + hub intact triggers victory', () => {
   world.hubHp = 3; // hub intact
 
   stepWorld(world, DT, IDLE_INPUT);
-  assert.equal(world.phase, 'victory', 'All waves defeated + hub intact = victory');
+  assert.equal(world.phase, 'stage_clear', 'All waves defeated + hub intact → stage_clear');
+  // Expire stage_clear timer → loads Finale stage (next after Service Incident)
+  for (let i = 0; i < 80; i++) {
+    stepWorld(world, DT, IDLE_INPUT);
+  }
+  assert.equal(world.phase, 'playing', 'After stage_clear → Finale (playing)');
   const snap = getHudSnapshot(world);
-  assert.equal(snap.playMode, 'wave_defense');
-  assert.equal(snap.currentWave, totalWaves);
-  assert.ok(snap.totalWaves! >= totalWaves);
+  assert.equal(snap.playMode, 'normal');
+  assert.equal(snap.currentWave, undefined);
 });

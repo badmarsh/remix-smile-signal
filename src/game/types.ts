@@ -22,6 +22,15 @@ export type PlayMode =
   | 'relay_repair'
   | 'wave_defense';
 
+export type StageId =
+  | 'clinic'
+  | 'endo'
+  | 'teatro'
+  | 'rimava_muzeum'
+  | 'rimava_vault'
+  | 'service'
+  | 'finale';
+
 export type CompanyAct = 'microdent' | 'teatro' | 'gala';
 
 export type ActiveHero = 'zubok' | 'signalik';
@@ -34,7 +43,7 @@ export type EnemyArchetype = 'patroller' | 'kiter' | 'charger';
 
 export type EnemyState = 'move' | 'telegraph' | 'attack' | 'recover' | 'bubbled' | 'ko';
 
-export type RelicKind = 'cerec' | 'laser' | 'patchcord' | 'wifi' | 'chronicle' | 'plaque';
+export type RelicKind = 'cerec' | 'laser' | 'patchcord' | 'wifi' | 'chronicle' | 'plaque' | 'service_key';
 
 export type BossPhase = 1 | 2 | 3 | 4;
 
@@ -253,6 +262,7 @@ export interface Snowflake {
 }
 
 export interface StageDefinition {
+  id: StageId;
   index: number;
   act: CompanyAct;
   title: string;

@@ -34,6 +34,10 @@ run(bin('tsx'), ['scripts/check-rules.mjs']);
 console.log('▸ vite build');
 run(bin('vite'), ['build']);
 
+// 5. Offline file:// compatible bundle
+console.log('▸ build:offline');
+run(bin('tsx'), ['scripts/build-offline.mjs']);
+
 console.log(`\n📊 verify.mjs: ${failures} chýb\n`);
 
 if (failures > 0) {

@@ -11,7 +11,7 @@
  */
 
 import { ZX_PALETTE } from '../didaktik/specs';
-import { StageDefinition } from './types';
+import { StageDefinition, StageId } from './types';
 
 export const TILE_SIZE = 8;
 export const GRID_COLS = 32;
@@ -217,6 +217,7 @@ function tileCenter(col: number, row: number) {
 
 export const STAGES: StageDefinition[] = [
   {
+    id: 'clinic',
     index: 0,
     act: 'microdent',
     title: 'Klinika microDENT',
@@ -280,6 +281,7 @@ export const STAGES: StageDefinition[] = [
     ],
   },
   {
+    id: 'endo',
     index: 1,
     act: 'microdent',
     title: 'Endo & 3D CBCT Lab',
@@ -331,6 +333,7 @@ export const STAGES: StageDefinition[] = [
     ],
   },
   {
+    id: 'teatro',
     index: 2,
     act: 'teatro',
     title: 'Optický uzol TeatrO',
@@ -373,6 +376,7 @@ export const STAGES: StageDefinition[] = [
     ],
   },
   {
+    id: 'rimava_muzeum',
     index: 3,
     act: 'teatro',
     title: 'Rieka Rimava & Kurinec',
@@ -416,6 +420,7 @@ export const STAGES: StageDefinition[] = [
     ],
   },
   {
+    id: 'rimava_vault',
     index: 4,
     act: 'gala',
     title: 'Gemersko-malohontské múzeum',
@@ -460,6 +465,7 @@ export const STAGES: StageDefinition[] = [
     ],
   },
   {
+    id: 'finale',
     index: 5,
     act: 'gala',
     title: 'Hlavné námestie · Plaketa MVP',
@@ -507,11 +513,12 @@ export const STAGES: StageDefinition[] = [
     ],
   },
   {
+    id: 'service',
     index: 6,
     act: 'gala',
     title: 'Servisný úraz · Rimavská Sobota',
     subtitle: '4 zóny · 90 s únik · oprava relé · obrana centra',
-    companyTag: 'Servisný úraz · Finálny blok',
+    companyTag: 'Servisný úraz · Akt IV',
     locationTag: 'Hlavné námestie · Mestská pamiatková zóna RS',
     retroHomage: 'Elite, Saboteur!, Bubble Bobble & R-Type',
     openingChronicle: 'KRONIKA: SERVISNÝ ÚRAZ · VYBER ZÓNU A PREŽI!',
@@ -521,7 +528,6 @@ export const STAGES: StageDefinition[] = [
     floorDotColor: ZX_PALETTE.blue,
     grid: MAP_STAGE_7,
     playerStart: tileCenter(15, 11),
-    bossSpawn: tileCenter(15, 10),
     timeLimitSec: 90,
     totalWaves: 5,
     startPlayMode: 'deploy_select',
@@ -569,7 +575,7 @@ export const STAGES: StageDefinition[] = [
     ],
     relic: {
       ...tileCenter(15, 11),
-      kind: 'plaque',
+      kind: 'service_key',
       name: 'Servisný kľúč',
       chronicleNote: 'ARTEFAKT: SERVISNÝ KLÚČ (+400)',
     },
@@ -625,4 +631,13 @@ export function isLockedDoorTile(
     return false;
   }
   return stage.grid[row][col] === 'D';
+}
+
+/**
+ * Získaj index štúpia podľa StageId (jediné miesto pravdy pre poradie štúpií).
+ * Slúži na načítanie konkrétneho štúpia bez magických čísiel v testoch a kóde.
+ */
+export function getStageIndex(id: StageId): number {
+  const stage = STAGES.find((s) => s.id === id);
+  return stage ? stage.index : -1;
 }

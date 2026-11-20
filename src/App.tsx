@@ -25,10 +25,10 @@ import {
   swapActiveHero,
   toggleCoopMode,
 } from './game/engine';
-import { selectTrackForStage, selectTitleTrack } from './game/music';
+import { selectTrackForMode, selectTrackForStage, selectTitleTrack } from './game/music';
 import { loadSavedProgress, saveProgress } from './game/progress';
 import { LOGICAL_H, LOGICAL_W, renderDidaktikFrame } from './game/renderer';
-import { AudioChipMode, GameWorld, HudSnapshot, InputState } from './game/types';
+import { AudioChipMode, GameWorld, HudSnapshot, InputState, PlayMode } from './game/types';
 
 const BEST_SCORE_KEY = 'smile_signal_didaktik_best_v1';
 const CUSTOM_RADO_PHOTO_KEY = 'zubok_signalik_rado_photo_v1';
@@ -570,18 +570,20 @@ export default function App() {
 
   const overlayOpen = tapeKitOpen || visualManualOpen || secretRoomOpen;
 
-  // Drive Melodik AY-3-8912 / 1-bit Beeper background music across stages
+  // Drive Melodik AY-3-8912 / 1-bit Beeper background music across stages and arc modes
   useEffect(() => {
     if (hud.phase === 'playing' && !overlayOpen && !introVisible && !muted) {
       if (hud.phase === 'title' || hud.phase === 'handover' || hud.phase === 'victory') {
         didaktikAudio.startMusic(selectTitleTrack());
+      } else if (hud.playMode !== 'normal') {
+        didaktikAudio.startMusic(selectTrackForMode(hud.playMode, hud.bossActive));
       } else {
         didaktikAudio.startMusic(selectTrackForStage(hud.stageIndex, hud.bossActive));
       }
     } else if (!tapeKitOpen) {
       didaktikAudio.stopMusic();
     }
-  }, [hud.phase, hud.stageIndex, hud.bossActive, overlayOpen, introVisible, muted, tapeKitOpen]);
+  }, [hud.phase, hud.stageIndex, hud.bossActive, hud.playMode, overlayOpen, introVisible, muted, tapeKitOpen]);
 
   useEffect(() => {
     return () => {

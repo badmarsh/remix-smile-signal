@@ -1,3 +1,5 @@
+import type { PlayMode } from './types';
+
 /**
  * Decoupled 3-channel Didaktik Melodik (AY-3-8912) & 1-bit Beeper music sequencer data.
  * Zero DOM dependencies — runs deterministically in unit tests and drives Web Audio in audio.ts.
@@ -185,6 +187,30 @@ export function selectTrackForStage(stageIndex: number, bossActive: boolean): Me
  */
 export function selectTitleTrack(): MelodikTrackId {
   return 'vianoce';
+}
+
+/**
+ * Selects the Melodik AY track for each Service Incident Arc play mode.
+ * deploy_select & timed_arena -> microdent (urgent clinic arpeggio)
+ * relay_repair & wave_defense -> rimava (warm winter chiptune)
+ * normal -> falls back to stage-based selection
+ */
+export function selectTrackForMode(
+  playMode: PlayMode,
+  bossActive: boolean
+): MelodikTrackId {
+  if (bossActive) return 'boss';
+  switch (playMode) {
+    case 'deploy_select':
+    case 'timed_arena':
+      return 'microdent';
+    case 'relay_repair':
+    case 'wave_defense':
+      return 'rimava';
+    case 'normal':
+    default:
+      return 'microdent';
+  }
 }
 
 /**

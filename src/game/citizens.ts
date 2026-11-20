@@ -115,6 +115,25 @@ export const STAGE_CITIZENS: readonly CitizenNpc[] = [
     x: 164,
     y: 148,
   },
+  // Stage 7: Servisný úraz
+  {
+    id: 'c10_service',
+    stageIndex: 6,
+    name: 'Ivana',
+    role: 'Vedúca servisu',
+    quote: 'Vyber zónu, prebehni koridor a obráň centrálny hub!',
+    x: 44,
+    y: 12,
+  },
+  {
+    id: 'c11_service',
+    stageIndex: 6,
+    name: 'Ondrej',
+    role: 'Technik RSNET',
+    quote: 'Relé zapoj v poradí – Signálik ti pomôže.',
+    x: 212,
+    y: 12,
+  },
 ];
 
 export function createCitizenSpeechState(): CitizenSpeechState {

@@ -15,6 +15,13 @@ export type GamePhase =
   | 'victory'
   | 'gameover';
 
+export type PlayMode =
+  | 'normal'
+  | 'deploy_select'
+  | 'timed_arena'
+  | 'relay_repair'
+  | 'wave_defense';
+
 export type CompanyAct = 'microdent' | 'teatro' | 'gala';
 
 export type ActiveHero = 'zubok' | 'signalik';
@@ -64,6 +71,8 @@ export interface BossState {
   hitFlash: number;
   hasAttackToken: boolean;
   attackCycleIdx: number;
+  /** True for the final-wave boss fragment (1 weak spot, shorter cycles) */
+  fragment?: boolean;
 }
 
 export interface HandoverConfetti {
@@ -282,6 +291,25 @@ export interface StageDefinition {
   orderedTargets?: boolean;
   /** Stage 5 locked vault doors ('D' tiles) unlocked upon collecting this relic */
   doorsUnlockedByRelic?: RelicKind;
+  /** Timed arena duration in seconds (Phase B) */
+  timeLimitSec?: number;
+  /** Wave defence spawn definition per wave (Phase D) */
+  waves?: Array<{
+    spawnTimer: number;
+    enemyComposition: { archetype: EnemyArchetype; count: number }[];
+    description: string;
+  }>;
+  /** Total wave count for wave_defense (defaults to waves.length) */
+  totalWaves?: number;
+  /** Partner charge tuning for timed_arena (Phase B) */
+  partnerChargeConfig?: {
+    chargeDuration: number;
+    radius: number;
+    damageMultiplier: number;
+    label: string;
+  };
+  /** Play mode this stage boots into (Stage 7 defaults to deploy_select) */
+  startPlayMode?: PlayMode;
 }
 
 export interface Player2Input {
@@ -359,9 +387,17 @@ export interface HudSnapshot {
   bossMaxHp: number;
   plaqueCarried: boolean;
   checkpointStageIndex: number;
-  radoPokeMode: boolean;
-  pokePromptVisible: boolean;
-  coopEnabled: boolean;
+    radoPokeMode: boolean;
+    pokePromptVisible: boolean;
+    coopEnabled: boolean;
+    playMode: PlayMode;
+    modeTimer: number;
+    timeRemaining?: number;
+    currentWave?: number;
+    totalWaves?: number;
+    partnerChargeRatio?: number;
+    relaySyncProgress?: number;
+    selectedZone?: number;
 }
 
 export interface GameWorld {
@@ -425,4 +461,22 @@ export interface GameWorld {
   coopEnabled: boolean;
   /** Queued sound triggers consumed by the browser audio bridge */
   audioQueue: AudioEvent[];
+  /** Active play mode ('normal' default) */
+  playMode: PlayMode;
+  /** Countdown timer (timed_arena) / spawn accumulator (wave_defense) */
+  modeTimer: number;
+  /** wave_defense: 1-based active wave */
+  currentWave: number;
+  /** wave_defense: enemies left to spawn in current wave */
+  enemiesToSpawn: number;
+  /** wave_defense: time since last enemy spawn */
+  spawnAccumulator: number;
+  /** timed_arena / relay_repair: partner charge progress 0..1 */
+  partnerChargeProgress: number;
+  /** deploy_select: 0..3 cursor zone index */
+  selectedZone: number;
+  /** relay_repair: both endpoints connected */
+  relaySolved: boolean;
+  /** wave_defense: hub integrity (death at 0) */
+  hubHp: number;
 }

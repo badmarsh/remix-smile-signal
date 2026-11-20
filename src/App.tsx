@@ -80,6 +80,7 @@ export default function App() {
   const worldRef = useRef<GameWorld | null>(null);
   const crtEnabledRef = useRef(true);
   const modalBlockingRef = useRef(false);
+  const lastFocusedElementRef = useRef<HTMLElement | null>(null);
   const radoPixelCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const keysHeldRef = useRef<Set<string>>(new Set());
   const fireJustPressedRef = useRef(false);
@@ -119,9 +120,23 @@ export default function App() {
 
   const [hud, setHud] = useState<HudSnapshot>(() => getHudSnapshot(worldRef.current!));
 
+  const [modalBlocking, setModalBlocking] = useState(false);
+
   useEffect(() => {
-    modalBlockingRef.current = tapeKitOpen || visualManualOpen || secretRoomOpen || introVisible;
+    const blocking = tapeKitOpen || visualManualOpen || secretRoomOpen || introVisible;
+    modalBlockingRef.current = blocking;
+    setModalBlocking(blocking);
   }, [tapeKitOpen, visualManualOpen, secretRoomOpen, introVisible]);
+
+  // Focus management: uložiť focus pred otvorením modály, obnoviť po zavretí
+  useEffect(() => {
+    if (modalBlocking) {
+      lastFocusedElementRef.current = document.activeElement as HTMLElement;
+    } else if (lastFocusedElementRef.current) {
+      lastFocusedElementRef.current.focus();
+      lastFocusedElementRef.current = null;
+    }
+  }, [modalBlocking]);
 
   // Pre-render Rado's photo into a strictly ZX_PALETTE quantized 24x24 pixel-art offscreen canvas
   useEffect(() => {

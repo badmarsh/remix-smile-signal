@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SPRITE_SIGNALIK_A, SPRITE_ZUBOK_A } from '../game/sprites';
 import { AudioChipMode, HudSnapshot } from '../game/types';
 import { PixelSpriteIcon, RimavskaSobotaCrest } from './BrandEmblems';
@@ -63,6 +63,8 @@ export const GameHud: React.FC<GameHudProps> = ({
   onOpenTapeKit,
   onVirtualInput,
 }) => {
+  const [isFireCharging, setIsFireCharging] = useState(false);
+
   const actAccent =
     hud.companyAct === 'microdent'
       ? 'text-[#00e8e8]'
@@ -441,13 +443,26 @@ export const GameHud: React.FC<GameHudProps> = ({
           </div>
           <button
             type="button"
-            aria-label="Vystreliť laser alebo signál"
-            onPointerDown={() => onVirtualInput('fire', true)}
-            onPointerUp={() => onVirtualInput('fire', false)}
-            onPointerLeave={() => onVirtualInput('fire', false)}
-            className="flex h-12 w-24 items-center justify-center rounded-sm border-2 border-[#00e8e8] bg-[#00c8c8]/90 font-display text-sm font-bold text-[#070a10] active:scale-95"
+            aria-label={`Vystreliť laser alebo signál${isFireCharging ? ' · nabíjanie...' : ''}`}
+            onPointerDown={() => {
+              setIsFireCharging(true);
+              onVirtualInput('fire', true);
+            }}
+            onPointerUp={() => {
+              setIsFireCharging(false);
+              onVirtualInput('fire', false);
+            }}
+            onPointerLeave={() => {
+              setIsFireCharging(false);
+              onVirtualInput('fire', false);
+            }}
+            className={`flex h-12 w-24 items-center justify-center rounded-sm border-2 font-display text-sm font-bold text-[#070a10] active:scale-95 transition-all duration-100 ${
+              isFireCharging
+                ? 'border-[#ffee00] bg-[#ffee00]/80 shadow-[0_0_20px_rgba(255,238,0,0.6)]'
+                : 'border-[#00e8e8] bg-[#00c8c8]/90'
+            }`}
           >
-            {isZubok ? 'LASER' : 'VLNA'}
+            {isZubok ? 'LASER' : 'VLNA'}{isFireCharging ? ' ⬜' : ''}
           </button>
         </div>
       </div>

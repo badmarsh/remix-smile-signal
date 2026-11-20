@@ -257,6 +257,7 @@ export const TapeKitModal: React.FC<TapeKitModalProps> = ({
           <button
             type="button"
             onClick={onClose}
+            autoFocus
             aria-label="Zavrieť kazetovú sadu Didaktik M"
             className="flex h-10 min-w-[40px] cursor-pointer items-center justify-center whitespace-nowrap rounded-sm border border-[#525660] bg-[#13161e] px-3 font-mono text-xs font-semibold text-[#ebe9e3] hover:border-[#ffee00] hover:text-[#ffee00]"
           >
